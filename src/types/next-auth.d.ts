@@ -1,15 +1,16 @@
 import NextAuth from 'next-auth'
 
 export interface ICredentialsValue {
-	codUser: string,
+	cod_user: string,
 	password: string
+	jwt: string
   }
 
 declare module 'next-auth' {
 	interface Session {
 		user: {
 			id: string
-			codUser: string
+			cod_user: string
 			name: string
 		}
 	}

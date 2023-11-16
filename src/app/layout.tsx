@@ -13,10 +13,12 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="pt-br">
-      <body className="bg-gray-800 text-white">
-        <NextAuthSessionProvider>{children}</NextAuthSessionProvider>
-      </body>
-    </html>
+    <NextAuthSessionProvider>
+      <html lang="pt-br">
+        <body className="bg-gray-800 text-white">
+          {children}
+        </body>
+      </html>
+    </NextAuthSessionProvider>
   )
 }

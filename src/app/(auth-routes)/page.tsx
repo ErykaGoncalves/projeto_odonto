@@ -5,27 +5,27 @@ import { useRouter } from "next/navigation"
 import { SyntheticEvent, useState } from "react"
 
 export default function Home() {
+  const router = useRouter()
   const [codUser, setCodUser] = useState<string>('')
   const [password, setPassword] = useState<string>('')
-
-  const router = useRouter()
 
   async function handleSubmit(event: SyntheticEvent) {
     event.preventDefault()
 
-    const result = await signIn('credentials', {
+    const response = await signIn('credentials', {
+      redirect: false,
       codUser,
-      password,
-      redirect: false
-    })
+      password
+    })  
 
-    if (result?.error) {
-      console.log(result)
+    if (response?.error) {
+      console.log('[LOGIN_RESPONSE]: ', response)
       return
     }
 
     router.replace('/admin')
   }
+
 
   return (
     <>
@@ -36,7 +36,7 @@ export default function Home() {
           <input
             className="h-12 rounded-md p-2 bg-transparent border border-gray-300"
             type="text"
-            name="codUser"
+            name="cod_user"
             placeholder="Digite seu código de usuário"
             onChange={(e) => setCodUser(e.target.value)}
           />
