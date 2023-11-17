@@ -3,56 +3,62 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { ICredentialsValue } from "@/types/next-auth";
 
 const nextAuthOptions: NextAuthOptions = {
-	providers: [
-		CredentialsProvider({
-			name: 'credentials',
-			credentials: {},
+  session: {
+    strategy: 'jwt'
+  },
+  providers: [
+    CredentialsProvider({
+      name: 'credentials',
+      credentials: {
+        cod_user: { label: "cod_user", type: "text", placeholder: "Digite seu código de usuário" },
+        password: { label: "Password", type: "password", placeholder: "Digite sua senha" }
+      },
 
-			async authorize(credentials, req) {
-				try {
-					const { cod_user, password } = credentials as ICredentialsValue;
+      async authorize(credentials: Record<"cod_user" | "password", string> | undefined): Promise<any> {
+        try {
+          if (!credentials) {
+            throw new Error('Credenciais não fornecidas');
+          }
+          const response = await fetch('http://localhost:3001/login', {
+            method: 'POST',
+            headers: {
+              'Content-type': 'application/json'
+            },
+            body: JSON.stringify({
+              cod_user: credentials.cod_user,
+              password: credentials.password
+            })
+          });
 
-					const response = await fetch('http://localhost:3001/login', {
-						method: 'POST',
-						headers: {
-							'Content-type': 'application/json'
-						},
-						body: JSON.stringify({
-							username: cod_user,
-							password: password
-						})
-					});
+          if (!response.ok) {
+            throw new Error('Credenciais inválidas');
+          }
 
-					console.log(response)
+          const user = await response.json();
 
-					if (response.ok) {
-						const user = await response.json();
-						return user;
-					} else {
-						const errorMessage = await response.text();
-						console.error('Erro na autenticação:', errorMessage);
-						return null;
-					}
-				} catch (error) {
-					console.error('Erro na requisição:', error);
-					return null;
-				}
-			},
-		})
-	],
-	pages: {
-		signIn: '/'
-	},
-	callbacks: {
-		async jwt({ token, user }) {
-			user && (token.user = user);
-			return token;
-		},
-		async session({ session, token }) {
-			session = token.user as any;
-			return session;
-		}
-	}
+          console.log(user);
+
+          return user;
+        } catch (error) {
+          console.error('Erro na requisição:', error);
+          return null;
+        }
+      },
+    })
+  ],
+  pages: {
+    signIn: '/'
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      user && (token.user = user);
+      return token;
+    },
+    async session({ session, token }) {
+      session = token.user as any;
+      return session;
+    }
+  }
 };
 
 const handler = NextAuth(nextAuthOptions);
