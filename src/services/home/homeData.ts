@@ -6,7 +6,7 @@ export default async function homeData({
   jwt
 }: IHomeProps) {
   try {
-    const apiUrl = 'http://localhost:3001/periodos'
+    const apiUrl = 'http://localhost:3001/procedimentos'
 
     console.log(apiUrl)
     const headers = new Headers()
