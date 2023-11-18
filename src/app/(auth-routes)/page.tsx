@@ -1,8 +1,11 @@
 'use client'
 
+import { Box, Typography, Button, TextField, Link, InputAdornment } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { SyntheticEvent, useState } from "react";
+import styles from '../../styles/page.module.css'
+import IconButton from '@mui/material/IconButton'
 
 export default function HomeAuth() {
   const router = useRouter();
@@ -32,32 +35,117 @@ export default function HomeAuth() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center w-full h-screen">
-      <h1 className="text-3xl mb-6">Login</h1>
-      <form className="w-[400px] flex flex-col gap-6" onSubmit={handleSubmit}>
-        <input
-          className="h-12 rounded-md p-2 bg-transparent border border-gray-300"
-          type="text"
-          name="cod_user"
-          placeholder="Digite seu código de usuário"
-          onChange={(e) => setCodUser(e.target.value)}
-        />
+    <Box
+      sx={{ padding: '20px' }}
+    >
+      <Box
+        sx={{
+          margin: 'auto 0',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          textAlign: 'center',
+          justifyContent: 'center',
+          width: '100%'
+        }}
+      >
+        <Box sx={{mt: '60px'}}>
+          <Typography
+            variant="h3"
+            component="h1"
+            textAlign="left"
+            width="100%"
+            sx={{ textAlign: 'center' }}
 
-        <input
-          className="h-12 rounded-md p-2 bg-transparent border border-gray-300"
-          type="password"
-          name="password"
-          placeholder="Digite sua senha"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <button
-          type="submit"
-          className="h-12 rounded-md bg-gray-300 text-gray-800 hover:bg-gray-400"
+          >
+            Bem-vindo à UNITRI!
+          </Typography>
+          <Typography 
+          variant="subtitle1" 
+          component="p" 
+          width="100%"
+          sx={{mt: '50px'}}
+          >
+            Acesse suas informações e explore nossas ferramentas para uma
+            jornada acadêmica eficiente.
+          </Typography>
+        </Box>
+        <form
+          onSubmit={handleSubmit}
+          style={{ marginTop: '60px', width: '100%' }}
         >
-          Entrar
-        </button>
-      </form>
-    </div>
-  );
+          <TextField
+            fullWidth
+            variant="outlined"
+            type="text"
+            name="cod_user"
+            placeholder="Digite seu código de usuário"
+            onChange={(e) => setCodUser(e.target.value)}
+            sx={{
+              margin: '20px 0 4px 0'
+            }}
+          />
+
+          <TextField
+            fullWidth
+            variant="outlined"
+            type="password"
+            name="password"
+            placeholder="Digite sua senha"
+            onChange={(e) => setPassword(e.target.value)}
+            InputProps={{
+              endAdornment: (
+                <InputAdornment position="end">
+                  <IconButton
+                    aria-label="toggle password visibility"
+                    edge="end"
+                  >
+                  </IconButton>
+                </InputAdornment>
+              )
+            }}
+            sx={{
+              margin: '20px 0 4px 0'
+            }}
+          />
+
+          <Button
+            variant="contained"
+            sx={{
+              width: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              marginBottom: '20px',
+              backgroundColor: '#a783fa',
+              mt: '50px',
+              '&:hover': {
+                backgroundColor: '#a783fa',
+                boxShadow: '0px 0px 20px #a783fa'
+              }
+            }}
+            type="submit"
+          >
+            Entrar
+          </Button>
+        </form>
+      </Box>
+      <Typography
+        textAlign="center"
+        variant="body1"
+        margin="auto 0"
+        className={styles.firstAccess}
+      >
+        Primeiro acesso?
+        <br />
+        <Link
+          href="https://"
+          target="_blank"
+          underline="hover"
+        >
+          Crie sua conta aqui
+        </Link>
+      </Typography>
+    </Box>
+  )
 }
