@@ -1,0 +1,97 @@
+
+.page{
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+.loginContainer{
+  width: 30%;
+  height: 90vh;
+}
+
+.loginImage{
+  width:  50%;
+  height: 90vh;
+}
+
+@media (max-width: 1600px) {
+  .loginContainer {
+    width: 40%;
+    height: 100vh;
+  }
+
+  .loginImage {
+    width: 60%;
+    height: 100vh;
+  }
+
+  .loginBackground {
+    display: none;
+  }
+}
+
+@media (max-width: 1280px) {
+  .loginContainer {
+    width: 85%;
+    height: 95vh;
+  }
+
+  .loginImage {
+    display: none;
+  }
+
+  .loginBackground {
+    display: block;
+  }
+
+  .formContato {
+    width: 100%;
+    height: auto;
+  }
+}
+
+
+
+@media (max-width: 1024px) {
+  .loginContainer {
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+  }
+
+  .firstAccess {
+    padding: 32px;
+  }
+}
+
+@media (max-height: 730px) {
+  .loginContainer {
+    width: 100%;
+    min-height: 100vh;
+    height: auto;
+  }
+
+  .loginImage {
+    display: none;
+  }
+
+  .loginBackground {
+    display: block;
+  }
+}
+
+@media (max-width: 1750px) {
+  .imgPage {
+    display: none;
+  }
+}
+
+@media (max-width: 900px) {
+  .lineForm {
+    width: 100%;
+  }
+  .selectForm{
+    width: 200px;
+  }
+}

@@ -1,9 +1,11 @@
 'use client'
 
+import theme from "@/theme"
+import { Button } from "@mui/material"
 import { signOut } from "next-auth/react"
 import { useRouter } from 'next/navigation'
 
-export default function ButtonLogout(){
+export default function ButtonLogout() {
 	const router = useRouter()
 
 	async function logout() {
@@ -14,5 +16,13 @@ export default function ButtonLogout(){
 		router.replace('/')
 	}
 
- return <button onClick={logout} className="p-2 w-40 border border-gray-300 rounded-md">Sair</button>
+	return (
+		<Button
+			variant="contained"
+			sx={{ mt: 1, background: theme.palette.primary.main }}
+			onClick={logout}
+		>
+			Sim, quero sair
+		</Button>
+	)
 }
