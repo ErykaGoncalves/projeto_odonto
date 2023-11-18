@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Typography, Button, TextField, Link, InputAdornment } from "@mui/material";
+import { Box, Typography, Button, TextField, InputAdornment } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { SyntheticEvent, useState } from "react";
@@ -11,12 +11,12 @@ export default function HomeAuth() {
   const router = useRouter();
   const [codUser, setCodUser] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [errorMessage, setErrorMessage] = useState<string | null>(null);
 
   async function handleSubmit(event: SyntheticEvent) {
     event.preventDefault();
 
     try {
-      // Faça a solicitação de login usando as credenciais fornecidas
       const response = await signIn('credentials', {
         redirect: false,
         cod_user: codUser,
@@ -25,12 +25,14 @@ export default function HomeAuth() {
 
       if (response?.error) {
         console.log('[LOGIN_RESPONSE]: ', response);
+        setErrorMessage("Credenciais inválidas. Por favor, verifique seu código de usuário e senha.");
         return;
       }
 
       router.replace('/panel');
     } catch (error) {
       console.error('Erro ao fazer login:', error);
+      setErrorMessage("Ocorreu um erro durante o login. Tente novamente mais tarde.");
     }
   }
 
@@ -49,7 +51,7 @@ export default function HomeAuth() {
           width: '100%'
         }}
       >
-        <Box sx={{mt: '60px'}}>
+        <Box sx={{ mt: '60px' }}>
           <Typography
             variant="h3"
             component="h1"
@@ -60,11 +62,11 @@ export default function HomeAuth() {
           >
             Bem-vindo à UNITRI!
           </Typography>
-          <Typography 
-          variant="subtitle1" 
-          component="p" 
-          width="100%"
-          sx={{mt: '50px'}}
+          <Typography
+            variant="subtitle1"
+            component="p"
+            width="100%"
+            sx={{ mt: '50px' }}
           >
             Acesse suas informações e explore nossas ferramentas para uma
             jornada acadêmica eficiente.
@@ -105,10 +107,16 @@ export default function HomeAuth() {
               )
             }}
             sx={{
-              margin: '20px 0 4px 0'
+              margin: '20px 0 4px 0',
+              color: errorMessage ? 'red' : 'inherit',
             }}
           />
-
+          {errorMessage && (
+            <Typography variant="body2" color="error">
+              {errorMessage}
+            </Typography>
+          )}
+          
           <Button
             variant="contained"
             sx={{
@@ -138,13 +146,6 @@ export default function HomeAuth() {
       >
         Primeiro acesso?
         <br />
-        <Link
-          href="https://"
-          target="_blank"
-          underline="hover"
-        >
-          Crie sua conta aqui
-        </Link>
       </Typography>
     </Box>
   )

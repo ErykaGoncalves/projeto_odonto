@@ -1,6 +1,5 @@
-/* eslint-disable react/no-unescaped-entities */
 'use client'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import MuiAppBar, {
     type AppBarProps as MuiAppBarProps
 } from '@mui/material/AppBar'
@@ -9,12 +8,10 @@ import useMediaQuery from '@mui/material/useMediaQuery'
 import MenuIcon from '@mui/icons-material/Menu'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import Avatar from '@mui/material/Avatar'
-// import { useSession } from 'next-auth/react'
 import styles from '../../../styles/page.module.css'
 import theme from '@/theme'
 import {
     IconButton,
-    Link,
     Menu,
     MenuItem,
     Toolbar,
@@ -24,6 +21,7 @@ import {
 } from '@mui/material'
 import { Logout } from '@mui/icons-material'
 import ModalLogout from './ModalLogout'
+import { useSession } from "next-auth/react"
 
 const drawerWidth = 250
 
@@ -52,9 +50,14 @@ export default function HeaderLayout({
     openSideMenu,
     setSideOpenMenu
 }: any): JSX.Element {
+    const { data: session, status } = useSession()
+    const [data, setData] = useState(null);
+    const [error, setError] = useState(null);
+    const [openModal, setOpenModal] = React.useState(false)
     const isMobile = useMediaQuery(theme.breakpoints.down('md'))
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
     const openUserBtn = Boolean(anchorEl)
+
     const handleClickUserBtn = (event: React.MouseEvent<HTMLElement>): void => {
         setAnchorEl(event.currentTarget)
     }
@@ -65,20 +68,19 @@ export default function HeaderLayout({
         setSideOpenMenu(() => true)
     }
 
-    const [openModal, setOpenModal] = React.useState(false)
     const handleOpenModal = (): void => {
         setOpenModal(true)
     }
-
-    //   const session = useSession()
-    //   const primeiroCaractereNome = session?.data?.user?.result?.dados[0].nome[0]
 
     useEffect(() => {
         if (isMobile) {
             setSideOpenMenu(false)
         }
-    }, [isMobile])
+    }, [isMobile, setSideOpenMenu])
 
+    if (status !== "authenticated") {
+        return <div>Informações do usuário não encontradas.</div>;
+      }
     return (
         <>
             <AppBar
@@ -129,7 +131,7 @@ export default function HeaderLayout({
                                 display: isMobile ? 'none' : 'block'
                             }}
                         >
-                            Olá, funcionário(a)
+                            Olá, {session.results[0].nome}. Bem-vindo(a)!
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             <Tooltip title="Meus dados">
@@ -148,8 +150,7 @@ export default function HeaderLayout({
                                             textAlign: 'end',
                                         }}
                                     >
-                                        {/* {primeiroCaractereNome} */}
-                                        A
+                                         {session.results[0].nome[0]}
                                     </Avatar>
                                 </IconButton>
                             </Tooltip>
