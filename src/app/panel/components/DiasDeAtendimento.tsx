@@ -1,117 +1,101 @@
 'use client'
-import * as React from 'react'
-import Paper from '@mui/material/Paper'
-import Table from '@mui/material/Table'
-import TableBody from '@mui/material/TableBody'
-import TableCell from '@mui/material/TableCell'
-import TableContainer from '@mui/material/TableContainer'
-import TableHead from '@mui/material/TableHead'
-import TableRow from '@mui/material/TableRow'
-import theme from '@/theme'
-import homeData from '@/services/home/homeData'
-import { useEffect, useState } from 'react'
-import { useSession } from 'next-auth/react'
+import * as React from 'react';
+import Paper from '@mui/material/Paper';
+import Table from '@mui/material/Table';
+import TableBody from '@mui/material/TableBody';
+import TableCell from '@mui/material/TableCell';
+import TableContainer from '@mui/material/TableContainer';
+import TableHead from '@mui/material/TableHead';
+import TableRow from '@mui/material/TableRow';
+import theme from '@/theme';
+import homeData from '@/services/home/homeData';
+import { useEffect, useState } from 'react';
+import { useSession } from 'next-auth/react';
 
 interface Column {
-  id: 'DiaSemana' | 'procedimento'
-  label: string
-  minWidth?: string
-  align?: 'right'
-  format?: (value: number) => string
+  id: 'dia' | 'nome';
+  label: string;
+  minWidth?: string;
+  align?: 'right';
+  format?: (value: number) => string;
 }
-
-const columns: readonly Column[] = [
-  { id: 'DiaSemana', label: 'Dia da semana', minWidth: '20vw' },
-  { id: 'procedimento', label: 'Procedimentos', minWidth: '100' },
-]
-
 
 interface Data {
-  DiaSemana: string
-  procedimento: string
+  [key: string]: string | number;
 }
 
-function createData(
-  DiaSemana: string,
-  procedimento: string,
-): Data {
-  return { DiaSemana, procedimento }
+const columns: Column[] = [
+  { id: 'dia', label: 'Dia da semana', minWidth: '20vw' },
+  { id: 'nome', label: 'Procedimentos', minWidth: '100' },
+];
+
+function createData(...values: (string | number)[]): Data {
+  const data: Data = {};
+  columns.forEach((column, index) => {
+    data[column.id] = values[index];
+  });
+  return data;
 }
-
-const rows = [
-  createData('Segunda-feira', 'ATIVIDADE'),
-  createData('Terça-feira', 'ATIVIDADE'),
-  createData('Quarta-feira', 'ATIVIDADE'),
-  createData('Quinta-feira', 'ATIVIDADE'),
-  createData('Sexta-feira', 'ATIVIDADE'),
-
-]
 
 export default function StickyHeadTable() {
-  const [page, setPage] = React.useState(0)
-  const [rowsPerPage, setRowsPerPage] = React.useState(10)
+  const [page, setPage] = React.useState(0);
+  const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const { data: session, status } = useSession();
-  const [data, setData] = useState(null);
-  const [error, setError] = useState(null);
-
+  const [rows, setRows] = useState<Data[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (status === "authenticated") {
+        if (status === 'authenticated') {
           const result = await homeData({ jwt: session?.jwt });
-          setData(result);
+          setRows(result.results.map((item: any, index: any) => createData(item.dia, item.nome, index)));
         }
       } catch (error) {
-        console.error("Erro ao obter os dados:", error);
-        // setError(error);
+        console.error('Erro ao obter os dados:', error);
       }
     };
 
     fetchData();
   }, [session, status]);
 
-    return (
-      <Paper sx={{ width: '900px', overflow: 'hidden' }}>
-        <TableContainer sx={{ Height: 600 }}>
-          <Table stickyHeader aria-label="sticky table">
-            <TableHead>
-              <TableRow>
-                {columns.map((column) => (
-                  <TableCell
-                    sx={{ background: theme.palette.primary.main, color: '#fff', fontSize: '1.2rem', lineHeight: '2rem' }}
-                    key={column.id}
-                    align={column.align}
-                    style={{ minWidth: column.minWidth }}
-                  >
-                    {column.label}
-                  </TableCell>
-                ))}
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {rows
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row) => {
-                  return (
-                    <TableRow hover role="checkbox" tabIndex={-1} key={row.DiaSemana}>
-                      {columns.map((column) => {
-                        const value = row[column.id]
-                        return (
-                          <TableCell key={column.id} align={column.align} sx={{ fontSize: '1.2rem', lineHeight: '2rem' }}>
-                            {column.format && typeof value === 'number'
-                              ? column.format(value)
-                              : value}
-                          </TableCell>
-                        )
-                      })}
-                    </TableRow>
-                  )
-                })}
-            </TableBody>
-          </Table>
-        </TableContainer>
-
-      </Paper>
-    )
-  }
+  return (
+    <Paper sx={{ width: '900px', overflow: 'hidden' }}>
+      <TableContainer sx={{ Height: 600 }}>
+        <Table stickyHeader aria-label="sticky table">
+          <TableHead>
+            <TableRow>
+              {columns.map((column) => (
+                <TableCell
+                  sx={{ background: theme.palette.primary.main, color: '#fff', fontSize: '1.2rem', lineHeight: '2rem' }}
+                  key={column.id}
+                  align={column.align}
+                  style={{ minWidth: column.minWidth }}
+                >
+                  {column.label}
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {rows
+              .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              .map((row, rowIndex) => (
+                <TableRow hover role="checkbox" tabIndex={-1} key={rowIndex}>
+                  {columns.map((column) => {
+                    const value = row[column.id];
+                    return (
+                      <TableCell key={column.id} align={column.align} sx={{ fontSize: '1.2rem', lineHeight: '2rem' }}>
+                        {column.format && typeof value === 'number'
+                          ? column.format(value)
+                          : value}
+                      </TableCell>
+                    );
+                  })}
+                </TableRow>
+              ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    </Paper>
+  );
+}
