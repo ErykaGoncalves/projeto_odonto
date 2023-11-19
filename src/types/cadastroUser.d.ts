@@ -1,0 +1,22 @@
+
+export interface ICadastroUserTotal {
+    email: string
+    endereco: string
+    telefone: string
+    data_nasc: string
+    cpf: string
+    nome: string
+  }
+
+export interface ICadastroUserResponse extends IDefaultResponse {
+    result: ICadastroUser[] | null
+  }
+  
+  export interface ICadastroUser {
+    email: string
+    endereco: string
+    telefone: string
+    data_nasc: string
+    cpf: string
+    nome: string
+  }

@@ -131,7 +131,7 @@ export default function HeaderLayout({
                                 display: isMobile ? 'none' : 'block'
                             }}
                         >
-                            Olá, {session.results[0].nome}. Bem-vindo(a)!
+                            Olá, {session.results[0].nome}!
                         </Typography>
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             <Tooltip title="Meus dados">
