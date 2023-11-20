@@ -8,11 +8,9 @@ export default async function homeData({
   try {
     const apiUrl = 'http://localhost:3001/procedimentos'
 
-    console.log(apiUrl)
     const headers = new Headers()
     headers.append('Authorization', `Bearer ${jwt}`)
 
-    console.log(apiUrl)
     const requestOptions: RequestInit = {
       method: 'GET',
       headers,

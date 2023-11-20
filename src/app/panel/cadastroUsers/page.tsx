@@ -1,5 +1,5 @@
 'use client'
-import { AlertColor, Box, Button, TextField, Typography, useMediaQuery } from "@mui/material"
+import { AlertColor, Box, Button, TextField, Typography, styled, useMediaQuery } from "@mui/material"
 import React, { useCallback, useState } from "react"
 import Users from '../../../../public/images/users.svg'
 import Image from 'next/image'
@@ -8,8 +8,9 @@ import Snackbar from '../../../components/Snackbar'
 import cadastroUserData from "@/services/cadastroUser/cadastroUserData"
 import { useSession } from "next-auth/react"
 
+
 export default function CadastroUsersPage(): JSX.Element {
-  const { data: session } = useSession()
+  const session = useSession()
   const lineForm = useMediaQuery('(max-width:1200px)')
   const [error, setError] = useState<string | null>(null)
   const [snackBarActive, setSnackBarActive] = useState<boolean>(false)
@@ -25,8 +26,36 @@ export default function CadastroUsersPage(): JSX.Element {
   const [telefone, setTelefone] = useState<string>('')
   const [endereco, setEndereco] = useState<string>('')
 
+  const handleNascimentoChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    const inputValue = e.target.value;
+
+    // Padrão de data "0000-00-00"
+    const datePattern = /^\d{4}-\d{2}-\d{2}$/;
+
+    if (datePattern.test(inputValue) || inputValue === '' || inputValue.length <= 10) {
+      setNascimento(inputValue);
+    }
+  };
+
+
   const handleSaveContent = async (): Promise<void> => {
     try {
+
+      if (
+        nome.trim() === '' ||
+        cpf.trim() === '' ||
+        nascimento.trim() === '' ||
+        email.trim() === '' ||
+        telefone.trim() === '' ||
+        endereco.trim() === ''
+      ) {
+        setSnackBarActive(true);
+        setSnackBarColor('warning');
+        setSnackBarMessage('Por favor, preencha todos os dados antes de cadastrar');
+        setAutoHideDuration(null);
+        return;
+      }
+
       setLoading(true)
       setSnackBarActive(true)
       setSnackBarColor('loading')
@@ -40,29 +69,34 @@ export default function CadastroUsersPage(): JSX.Element {
         dataNasc: nascimento,
         cpf,
         nome,
-        jwt: session?.jwt ?? '',
+        jwt: session?.data?.jwt ?? '',
       })
 
-      if (response == error) {
-        setSnackBarActive(true);
-        setSnackBarColor('error');
-        setSnackBarMessage('Prezado funcionário, ocorreu um erro, por favor, reinicie o sistema');
-        setAutoHideDuration(null);
+      if (response && response.error !== undefined && response.msgOriginal) {
+        if (response.error) {
+          setSnackBarColor('error');
+          setSnackBarMessage(response.msgUser ?? 'Prezado funcionário, ocorreu um erro, por favor, reinicie o sistema');
+          setAutoHideDuration(null);
+        } else {
+          setSnackBarColor('success');
+          setSnackBarMessage('Sucesso ao cadastrar o usuário');
+          setAutoHideDuration(5000);
+        }
       } else {
-        setSnackBarActive(true);
-        setSnackBarColor('success');
-        setSnackBarMessage('Sucesso ao cadastrar o usuário');
-        setAutoHideDuration(5000);
+        setSnackBarColor('error');
+        setSnackBarMessage('Erro ao processar a resposta da API');
+        setAutoHideDuration(null);
       }
     } catch (error) {
-      console.error(error)
-      setSnackBarColor('error')
-      setSnackBarMessage('Houve um erro ao salvar o cadastri do usuário.')
-      setAutoHideDuration(null)
+      console.error(error);
+      setSnackBarColor('error');
+      setSnackBarMessage('Houve um erro ao salvar o cadastro do usuário.');
+      setAutoHideDuration(null);
     } finally {
-      setLoading(false)
+      setLoading(false);
     }
   }
+
   return (
     <>
       {snackBarActive && (
@@ -87,6 +121,7 @@ export default function CadastroUsersPage(): JSX.Element {
               <TextField
                 name="nome"
                 label="Nome Completo"
+                required
                 variant="outlined"
                 className={styles.lineForm}
                 sx={{ width: '800px' }}
@@ -112,7 +147,7 @@ export default function CadastroUsersPage(): JSX.Element {
                 variant="outlined"
                 sx={{ width: '800px' }}
                 value={nascimento}
-                onChange={(e) => setNascimento(e.target.value)}
+                onChange={handleNascimentoChange}
               />
             </Box>
             <Box sx={{ mb: 2 }}>
@@ -148,7 +183,12 @@ export default function CadastroUsersPage(): JSX.Element {
                 onChange={(e) => setEndereco(e.target.value)}
               />
             </Box>
-            <Button onClick={handleSaveContent} variant="contained" color="primary" style={{ marginTop: '16px', background: '#cab3ff' }}>
+            <Button
+              onClick={handleSaveContent}
+              variant="contained"
+              color="primary"
+              style={{ marginTop: '16px', background: '#cab3ff' }}
+            >
               Cadastrar
             </Button>
           </Box>

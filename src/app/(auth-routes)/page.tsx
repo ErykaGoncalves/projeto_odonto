@@ -24,7 +24,6 @@ export default function HomeAuth() {
       });
 
       if (response?.error) {
-        console.log('[LOGIN_RESPONSE]: ', response);
         setErrorMessage("Credenciais inválidas. Por favor, verifique seu código de usuário e senha.");
         return;
       }

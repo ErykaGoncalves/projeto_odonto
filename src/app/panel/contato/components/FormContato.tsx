@@ -20,7 +20,6 @@ export default function FormContato() {
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
-    console.log(formData);
   };
 
   const whiteText = {
