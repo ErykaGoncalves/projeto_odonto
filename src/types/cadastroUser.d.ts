@@ -11,7 +11,8 @@ export interface ICadastroUserTotal {
 export interface ICadastroUserResponse extends IDefaultResponse {
     msgOriginal: boolean | null
     msgUser: string
-    error: undefined
+    error: string
+    nro_prontuario: string
     result: ICadastroUser[] | null
   }
   

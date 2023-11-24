@@ -71,20 +71,25 @@ export default function CadastroUsersPage(): JSX.Element {
         nome,
         jwt: session?.data?.jwt ?? '',
       })
-
       if (response && response.error !== undefined && response.msgOriginal) {
         if (response.error) {
           setSnackBarColor('error');
           setSnackBarMessage(response.msgUser ?? 'Prezado funcionário, ocorreu um erro, por favor, reinicie o sistema');
           setAutoHideDuration(null);
         } else {
+          setNome('')
+          setCpf('')
+          setNascimento('')
+          setEmail('')
+          setTelefone('')
+          setEndereco('')
+
           setSnackBarColor('success');
-          setSnackBarMessage('Sucesso ao cadastrar o usuário');
-          setAutoHideDuration(5000);
+          setSnackBarMessage(response.msgUser + ' Seu número de prontuário é: ' + response?.nro_prontuario ?? 'Sucesso ao cadastrar o usuário' + response?.nro_prontuario);
         }
       } else {
         setSnackBarColor('error');
-        setSnackBarMessage('Erro ao processar a resposta da API');
+        setSnackBarMessage(response?.msgUser ?? 'Erro ao processar a resposta da API');
         setAutoHideDuration(null);
       }
     } catch (error) {
