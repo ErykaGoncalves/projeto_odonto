@@ -4,34 +4,32 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import periodoData from '@/services/cadastroClinica/periodoData';
 import { useContext, useEffect, useState } from 'react';
+import turnosData from '@/services/cadastroClinica/turnosData';
 import { CadastroClinicaContext } from '@/context/cadastroClinica/CadastroClinicaContext';
 import { AUTHENTICATED } from '@/utils/constants';
 import { Skeleton } from '@mui/material';
 
-interface BasicSelectProps {
-  contextCallback?: (payload: string) => void;
-  session: any;
-  periodo: string | null; // Permite valores nulos
-  setError: React.Dispatch<React.SetStateAction<string | null>>;
+interface TurnoSelectProps {
+  contextCallback?: (payload: string) => void
+  session: any
+  turno: string
+  setError: React.Dispatch<React.SetStateAction<string | null>>
 }
 
-
-const SelectPeriodo = ({ session, periodo, setError }: BasicSelectProps) => {
-  const context = useContext(CadastroClinicaContext);
-  const [periods, setPeriods] = useState<string[]>([]);
-  const [selectedPeriod, setSelectedPeriod] = React.useState('');
+const SelectTurno = ({ session }: TurnoSelectProps) => {
+  const context = useContext(CadastroClinicaContext)
+  const [turnos, setTurnos] = useState<string[]>([]);
+  const [selectedTurnos, setSelectedTurnos] = React.useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (session.status === 'authenticated') {
-          const result = await periodoData({ jwt: session.data?.jwt ?? '', periodo: selectedPeriod });
+          const result = await turnosData({ jwt: session.data?.jwt ?? '', turno: selectedTurnos });
           const resultsObject: Record<string, string> = result.results;
-          const extractedPeriods = Object.values(resultsObject);
-          context?.salvarPeriodo(selectedPeriod)
-          setPeriods(extractedPeriods);
+          const extractedTurnos = Object.values(resultsObject);
+          setTurnos(extractedTurnos);
         }
       } catch (error) {
         console.error('Erro ao obter os dados:', error);
@@ -39,36 +37,35 @@ const SelectPeriodo = ({ session, periodo, setError }: BasicSelectProps) => {
     };
 
     fetchData();
-  }, [session, selectedPeriod, context]);
+  }, [session, selectedTurnos]);
 
   const handleChange = (event: SelectChangeEvent) => {
-    setSelectedPeriod(event.target.value);
-    context?.salvarPeriodo(event.target.value); // Certifique-se de passar o valor correto aqui
+    setSelectedTurnos(event.target.value)
+    context?.salvarTurno(event.target.value);
   };
-
   if (session.status === AUTHENTICATED) {
     return (
       <>
         <Box sx={{ minWidth: 120 }}>
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Período</InputLabel>
+            <InputLabel id="demo-simple-select-label">Horário</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"
+              value={selectedTurnos}
+              label="Horário"
               onChange={handleChange}
-              value={selectedPeriod}
-              label="Periodo"
             >
-              {periods.map((period) => (
-                <MenuItem key={period} value={period}>
-                  {period} PERÍODO
+              {turnos.map((turno) => (
+                <MenuItem key={turno} value={turno}>
+                  {turno}
                 </MenuItem>
               ))}
             </Select>
           </FormControl>
         </Box>
       </>
-    );
+    )
   }
 
   return (
@@ -79,6 +76,6 @@ const SelectPeriodo = ({ session, periodo, setError }: BasicSelectProps) => {
       height={48}
     />
   );
-};
+}
 
-export default SelectPeriodo;
+export default SelectTurno;

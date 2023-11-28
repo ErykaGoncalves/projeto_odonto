@@ -24,7 +24,7 @@ export default function HomeAuth() {
       });
 
       if (response?.error) {
-        setErrorMessage("Credenciais inválidas. Por favor, verifique seu código de usuário e senha.");
+        setErrorMessage("Credenciais inválidas. Por favor, verifique seu código de usuário e senha." + errorMessage);
         return;
       }
 
