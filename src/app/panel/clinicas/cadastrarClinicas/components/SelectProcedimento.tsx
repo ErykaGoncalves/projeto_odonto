@@ -43,15 +43,13 @@ const SelectProcedimento = ({ session, contextCallback, setError }: BasicSelectP
   const handleChange = (event: SelectChangeEvent) => {
     const selectedProcedimentoId = event.target.value;
     const selectedProcedimentoObject = procedimento.find((p) => p.id === selectedProcedimentoId);
-
+  
     if (selectedProcedimentoObject) {
       setSelectedProcedimento({
         id: selectedProcedimentoId,
         nome: selectedProcedimentoObject.nome,
       });
-
-      context?.salvarTurno(selectedProcedimentoObject.nome);
-      context?.salvarProcedimento(selectedProcedimentoObject);
+      context?.salvarIdProcedimento(selectedProcedimentoObject);
     }
   };
 

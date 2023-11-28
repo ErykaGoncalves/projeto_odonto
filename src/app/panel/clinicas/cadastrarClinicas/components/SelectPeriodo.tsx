@@ -13,7 +13,7 @@ import { Skeleton } from '@mui/material';
 interface BasicSelectProps {
   contextCallback?: (payload: string) => void;
   session: any;
-  periodo: string | null; // Permite valores nulos
+  periodo: string | undefined
   setError: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
@@ -43,7 +43,7 @@ const SelectPeriodo = ({ session, periodo, setError }: BasicSelectProps) => {
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedPeriod(event.target.value);
-    context?.salvarPeriodo(event.target.value); // Certifique-se de passar o valor correto aqui
+    context?.salvarPeriodo(event.target.value);
   };
 
   if (session.status === AUTHENTICATED) {

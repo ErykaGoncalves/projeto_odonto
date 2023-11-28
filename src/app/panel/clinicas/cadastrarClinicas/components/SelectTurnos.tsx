@@ -13,7 +13,7 @@ import { Skeleton } from '@mui/material';
 interface TurnoSelectProps {
   contextCallback?: (payload: string) => void
   session: any
-  turno: string
+  turno: string | undefined
   setError: React.Dispatch<React.SetStateAction<string | null>>
 }
 
@@ -41,6 +41,7 @@ const SelectTurno = ({ session }: TurnoSelectProps) => {
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectedTurnos(event.target.value)
+    context?.salvarPeriodo(event.target.value)
     context?.salvarTurno(event.target.value);
   };
   if (session.status === AUTHENTICATED) {

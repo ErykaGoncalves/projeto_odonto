@@ -1,12 +1,11 @@
 import { ICadastroClinicaResponse } from '@/types/cadastroClinica';
 
 interface ICadastroClinicaProps {
-  periodo: string;
-  turno: string;
-  id_procedimento?: string
+  periodo: string | undefined;
+  turno: string | undefined;
+  id_procedimento: string | undefined;
   jwt: string;
 }
-
 
 export default async function cadastroClinicaData({
   periodo,
@@ -16,6 +15,7 @@ export default async function cadastroClinicaData({
 }: ICadastroClinicaProps): Promise<ICadastroClinicaResponse | null> {
   try {
     const apiUrl = 'http://localhost:3001/clinica';
+
     const requestOptions: RequestInit = {
       method: 'POST',
       headers: {

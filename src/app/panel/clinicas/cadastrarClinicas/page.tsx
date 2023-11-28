@@ -10,9 +10,7 @@ import SelectProcedimento from './components/SelectProcedimento'
 import cadastroClinicaData from "@/services/cadastroClinica/cadastrarData";
 import Snackbar from "@/components/Snackbar";
 import { useSession } from "next-auth/react";
-import { Procedimento } from "@/types/cadastroClinica";
 import { CadastroClinicaContext } from "@/context/cadastroClinica/CadastroClinicaContext";
-
 
 export default function CadastroClinicaPage(): JSX.Element {
   const [error, setError] = useState<string | null>(null);
@@ -23,9 +21,10 @@ export default function CadastroClinicaPage(): JSX.Element {
   const [autoHideDuration, setAutoHideDuration] = useState<number | null>(2000);
   const [periodo, setPeriodo] = useState<string>('');
   const [turno, setTurno] = useState<string>('');
-  const [id_procedimento, setIdProcedimento] = useState<string>('');
+  const [id_procedimento, setIdProcedimento] = useState<object>({});
   const session = useSession();
   const context = useContext(CadastroClinicaContext)
+
 
   const handleSaveContent = async (): Promise<void> => {
     try {
@@ -34,21 +33,26 @@ export default function CadastroClinicaPage(): JSX.Element {
       setSnackBarColor('loading');
       setSnackBarMessage('Carregando...');
       setAutoHideDuration(null);
-
+  
       const response = await cadastroClinicaData({
-        periodo: context?.state.periodo ?? '',
-        turno: context?.state.turno || '',
-        id_procedimento: context?.state.procedimento || '',
+        periodo: context?.state.periodo,
+        turno: context?.state.turno,
+        id_procedimento: context?.state.procedimento,
         jwt: session?.data?.jwt ?? '',
       });
 
-      console.log(periodo)
-      // console.log(turno)
-      // console.log(id_procedimento)
+      // console.log(context?.state.periodo)
+      // console.log(context?.state.turno)
+      // console.log(context?.state.procedimento)
 
-      console.log(response)
+      // console.log(response)
 
-      if (response && response.error !== undefined && response.msgOriginal) {
+
+      console.log('Periodo:', context?.state.periodo);
+      console.log('Turno:', context?.state.turno);
+      console.log('Procedimento ID:', context?.state.procedimento);
+
+      if (response) {
         if (response.error) {
           setSnackBarColor('error');
           setSnackBarMessage(response.msgUser + error);
@@ -58,9 +62,9 @@ export default function CadastroClinicaPage(): JSX.Element {
           setSnackBarMessage(response.msgUser);
         }
       }
-    } catch (error) {
+    } catch (error: any) {
       setSnackBarColor('error');
-      setSnackBarMessage('Houve um erro ao salvar o cadastro do usuário.');
+      setSnackBarMessage('Houve um erro ao salvar o cadastro do usuário: ' + String(error));
       setAutoHideDuration(null);
     } finally {
       setLoading(false);
@@ -102,7 +106,7 @@ export default function CadastroClinicaPage(): JSX.Element {
             <Box sx={{ mb: 2 }}>
               <SelectPeriodo
                 session={session}
-                periodo={context?.state.periodo ?? null}  // Pode ser null ou indefinido
+                periodo={context?.state.periodo}
                 setError={setError}
                 contextCallback={context?.salvarPeriodo}
               />
@@ -118,9 +122,9 @@ export default function CadastroClinicaPage(): JSX.Element {
             <Box sx={{ mb: 2 }}>
               <SelectProcedimento
                 session={session}
-                procedimento={context?.state.procedimento_id}
+                procedimento={context?.state.procedimento}
                 setError={setError}
-                contextCallback={context?.salvarProcedimento && context.salvarIdProcedimento}
+                contextCallback={context?.salvarIdProcedimento && context.salvarIdProcedimento}
               />
             </Box>
             <Button

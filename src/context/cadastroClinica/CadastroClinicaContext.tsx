@@ -10,7 +10,6 @@ interface ICadastroClinicaContext {
   state: typeof initialState
   salvarPeriodo: (payload: string) => void
   salvarTurno: (payload: string) => void
-  salvarProcedimento: (payload: string) => void
   salvarIdProcedimento: (payload: string) => void
 }
 
@@ -29,10 +28,6 @@ export default function CadastroProvider({
     dispatch({ type: actions.SALVAR_TURNO, payload })
   }
 
-  const salvarProcedimento = (payload: string): void => {
-    dispatch({ type: actions.SALVAR_PROCEDIMENTO, payload })
-  }
-
   const salvarIdProcedimento = (payload: string): void => {
     dispatch({ type: actions.SALVAR_ID_PROCEDIMENTO, payload })
   }
@@ -43,7 +38,6 @@ export default function CadastroProvider({
         state,
         salvarPeriodo,
         salvarTurno,
-        salvarProcedimento,
         salvarIdProcedimento
       }}
     >
