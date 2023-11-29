@@ -10,7 +10,7 @@ import { AlertColor, Box, Button, Chip, Typography } from '@mui/material';
 import financeiro from '../../../../../public/images/financeiro.svg'
 import Image from 'next/image'
 import styles from '../../../../styles/page.module.css'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import clinicasAllData from '@/services/financeiroClinica/clinicasAllData';
 import { useSession } from 'next-auth/react';
 
@@ -50,35 +50,40 @@ export default function MultipleSelect(): JSX.Element {
     const [loading, setLoading] = useState<boolean>(false);
     const [snackBarMessage, setSnackBarMessage] = useState<string>('');
     const [autoHideDuration, setAutoHideDuration] = useState<number | null>(2000);
-    const session = useSession()
-
-    console.log(session)
-    const handleSaveContent = async (): Promise<void> => {
-        try {
-            if (session.status === 'authenticated') {
-                setLoading(true);
-                setSnackBarActive(true);
-                setSnackBarColor('loading');
-                setSnackBarMessage('Carregando...');
-                setAutoHideDuration(null);
-
-                const response = await clinicasAllData({
-                    jwt: session?.data?.jwt ?? '',
-                });
-
-                console.log(response)
-
-            }
-        } catch (error: any) {
-            setSnackBarColor('error');
-            setSnackBarMessage('Houve um erro ao mostrar as clinicas: ' + String(error));
-            setAutoHideDuration(null);
-        } finally {
-            setLoading(false);
-        }
-    };
+    const session = useSession();
     const theme = useTheme();
     const [personName, setPersonName] = React.useState<string[]>([]);
+    const [clinicas, setClinicas] = React.useState<string[]>([]);
+
+    useEffect(() => {
+        const fetchData = async (): Promise<void> => {
+            try {
+                if (session.status === 'authenticated') {
+                    setLoading(true);
+                    setSnackBarActive(true);
+                    setSnackBarColor('loading');
+                    setSnackBarMessage('Carregando...');
+                    setAutoHideDuration(null);
+    
+                    const response = await clinicasAllData({
+                        jwt: session?.data?.jwt ?? '',
+                    });
+    
+                    const nomesClinicas = response.results.map((clinica: any) => clinica.nome);
+    
+                    setClinicas(nomesClinicas);
+                }
+            } catch (error: any) {
+                setSnackBarColor('error');
+                setSnackBarMessage('Houve um erro ao mostrar as clínicas: ' + String(error));
+                setAutoHideDuration(null);
+            } finally {
+                setLoading(false);
+            }
+        };
+    
+        fetchData(); // Chamado quando a sessão é autenticada
+    }, [session]);
 
     const handleChange = (event: SelectChangeEvent<typeof personName>) => {
         const {
@@ -89,6 +94,7 @@ export default function MultipleSelect(): JSX.Element {
         );
     };
 
+
     return (
         <Box sx={{ padding: '20px' }}>
             <Typography variant="h3" sx={{ mb: 2 }}>
@@ -98,44 +104,41 @@ export default function MultipleSelect(): JSX.Element {
                 Por favor, informe a clínica ao qual deseja ver seus dados financeiros.
             </Typography>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                <Box sx={{ m: 2 }} >
-                    <Box>
-                        <FormControl>
-                            <InputLabel id="demo-multiple-chip-label">Clínica</InputLabel>
-                            <Select
-                                labelId="demo-multiple-chip-label"
-                                id="demo-multiple-chip"
-                                multiple
-                                value={personName}
-                                className={styles.selectForm}
-                                onChange={handleChange}
-                                input={<OutlinedInput id="select-multiple-chip" label="Clínica" />}
-                                renderValue={(selected) => (
-                                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                                        {selected.map((value) => (
-                                            <Chip key={value} label={value} />
-                                        ))}
-                                    </Box>
-                                )}
-                                MenuProps={MenuProps}
-                                sx={{ width: 800 }}
-                            >
-                                {names.map((name) => (
-                                    <MenuItem
-                                        key={name}
-                                        value={name}
-                                        style={getStyles(name, personName, theme)}
-                                    >
-                                        {name}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </Box>
+                <Box sx={{ m: 2 }}>
+                    <FormControl>
+                        <InputLabel id="demo-multiple-chip-label">Clínica</InputLabel>
+                        <Select
+                            labelId="demo-multiple-chip-label"
+                            id="demo-multiple-chip"
+                            multiple
+                            value={personName}
+                            className={styles.selectForm}
+                            onChange={handleChange}
+                            input={<OutlinedInput id="select-multiple-chip" label="Clínica" />}
+                            renderValue={(selected) => (
+                                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                                    {selected.map((value) => (
+                                        <Chip key={value} label={value} />
+                                    ))}
+                                </Box>
+                            )}
+                            MenuProps={MenuProps}
+                            sx={{ width: 800 }}
+                        >
+                            {clinicas.map((clinica) => (
+                                <MenuItem
+                                    key={clinica}
+                                    value={clinica}
+                                    style={getStyles(clinica, personName, theme)}
+                                >
+                                    {clinica}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
                     <Button
                         variant="contained"
                         color="primary"
-                        onClick={handleSaveContent}
                         style={{
                             marginTop: '16px',
                             background: '#cab3ff'
