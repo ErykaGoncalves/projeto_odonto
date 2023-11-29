@@ -93,7 +93,6 @@ export default function CadastroUsersPage(): JSX.Element {
         setAutoHideDuration(null);
       }
     } catch (error) {
-      console.error(error);
       setSnackBarColor('error');
       setSnackBarMessage('Houve um erro ao salvar o cadastro do usuário.');
       setAutoHideDuration(null);

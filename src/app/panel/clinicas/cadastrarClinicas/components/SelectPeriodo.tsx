@@ -18,7 +18,7 @@ interface BasicSelectProps {
 }
 
 
-const SelectPeriodo = ({ session, periodo, setError }: BasicSelectProps) => {
+const SelectPeriodo = ({ session }: BasicSelectProps) => {
   const context = useContext(CadastroClinicaContext);
   const [periods, setPeriods] = useState<string[]>([]);
   const [selectedPeriod, setSelectedPeriod] = React.useState('');

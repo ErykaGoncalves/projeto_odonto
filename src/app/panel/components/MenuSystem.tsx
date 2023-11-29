@@ -176,18 +176,6 @@ export default function MenuSystem({
                             </List>
                         </Collapse>
 
-                        <Link
-                            href='/panel/boletos'
-                            sx={{ color: '#fff', textDecoration: 'none' }}
-                        >
-                            <ListItemButton>
-                                <ListItemIcon sx={{ color: '#fff' }}>
-                                    <MonetizationOnIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Boletos" />
-                            </ListItemButton>
-                        </Link>
-
                         <ListItemButton
                             onClick={() => {
                                 handleClick('clinicas')
@@ -225,16 +213,6 @@ export default function MenuSystem({
                                 </Link>
                             </List>
                         </Collapse>
-
-                        <ListItemButton
-                            href="/panel/contato"
-                        >
-                            <ListItemIcon sx={{ color: '#fff' }}>
-                                <ContactPhoneIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Contato" />
-                        </ListItemButton>
-
                         <ListItemButton onClick={handleOpenModal}>
                             <ListItemIcon sx={{ color: '#fff' }}>
                                 <LogoutIcon />
