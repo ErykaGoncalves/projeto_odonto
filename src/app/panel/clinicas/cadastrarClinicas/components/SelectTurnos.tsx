@@ -49,7 +49,7 @@ const SelectTurno = ({ session }: TurnoSelectProps) => {
       <>
         <Box sx={{ minWidth: 120 }}>
           <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Horário</InputLabel>
+            <InputLabel id="demo-simple-select-label">Turnos</InputLabel>
             <Select
               labelId="demo-simple-select-label"
               id="demo-simple-select"

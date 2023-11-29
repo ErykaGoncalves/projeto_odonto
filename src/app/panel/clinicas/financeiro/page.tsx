@@ -6,10 +6,14 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
-import { Box, Button, Chip, Typography } from '@mui/material';
+import { AlertColor, Box, Button, Chip, Typography } from '@mui/material';
 import financeiro from '../../../../../public/images/financeiro.svg'
 import Image from 'next/image'
 import styles from '../../../../styles/page.module.css'
+import { useState } from 'react';
+import clinicasAllData from '@/services/financeiroClinica/clinicasAllData';
+import { useSession } from 'next-auth/react';
+
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -40,6 +44,39 @@ function getStyles(name: string, personName: string[], theme: Theme) {
 }
 
 export default function MultipleSelect(): JSX.Element {
+    const [error, setError] = useState<string | null>(null);
+    const [snackBarActive, setSnackBarActive] = useState<boolean>(false);
+    const [snackBarColor, setSnackBarColor] = useState<AlertColor | 'loading'>('loading');
+    const [loading, setLoading] = useState<boolean>(false);
+    const [snackBarMessage, setSnackBarMessage] = useState<string>('');
+    const [autoHideDuration, setAutoHideDuration] = useState<number | null>(2000);
+    const session = useSession()
+
+    console.log(session)
+    const handleSaveContent = async (): Promise<void> => {
+        try {
+            if (session.status === 'authenticated') {
+                setLoading(true);
+                setSnackBarActive(true);
+                setSnackBarColor('loading');
+                setSnackBarMessage('Carregando...');
+                setAutoHideDuration(null);
+
+                const response = await clinicasAllData({
+                    jwt: session?.data?.jwt ?? '',
+                });
+
+                console.log(response)
+
+            }
+        } catch (error: any) {
+            setSnackBarColor('error');
+            setSnackBarMessage('Houve um erro ao mostrar as clinicas: ' + String(error));
+            setAutoHideDuration(null);
+        } finally {
+            setLoading(false);
+        }
+    };
     const theme = useTheme();
     const [personName, setPersonName] = React.useState<string[]>([]);
 
@@ -95,7 +132,15 @@ export default function MultipleSelect(): JSX.Element {
                             </Select>
                         </FormControl>
                     </Box>
-                    <Button type="submit" variant="contained" color="primary" style={{ marginTop: '16px', background: '#cab3ff' }}>
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={handleSaveContent}
+                        style={{
+                            marginTop: '16px',
+                            background: '#cab3ff'
+                        }}
+                    >
                         Pesquisar
                     </Button>
                 </Box>
