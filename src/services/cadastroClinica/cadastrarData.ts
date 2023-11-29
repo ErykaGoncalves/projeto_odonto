@@ -1,16 +1,16 @@
 import { ICadastroClinicaResponse } from '@/types/cadastroClinica';
 
 interface ICadastroClinicaProps {
+  nome: string | undefined;
   periodo: string | undefined;
   turno: string | undefined;
-  id_procedimento: string | undefined;
   jwt: string;
 }
 
 export default async function cadastroClinicaData({
   periodo,
   turno,
-  id_procedimento,
+  nome,
   jwt,
 }: ICadastroClinicaProps): Promise<ICadastroClinicaResponse | null> {
   try {
@@ -25,7 +25,7 @@ export default async function cadastroClinicaData({
       body: JSON.stringify({
         periodo,
         turno,
-        id_procedimento,
+        nome,
       }),
       redirect: 'follow',
       cache: 'no-cache',

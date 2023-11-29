@@ -1,6 +1,6 @@
 interface IProcedimentoProps {
-    jwt: any;
-    procedimento: any;
+    jwt: string;
+    nome: string;
   }  
 
 export default async function ProcedimentoData({

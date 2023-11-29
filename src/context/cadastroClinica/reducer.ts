@@ -11,7 +11,7 @@ type ACTIONTYPE =
       payload: string;
     }
   | {
-      type: typeof actions.SALVAR_ID_PROCEDIMENTO;
+      type: typeof actions.SALVAR_NOME;
       payload: string;
     }
 
@@ -24,8 +24,8 @@ type ACTIONTYPE =
           return { ...state, periodo: action.payload };
         case actions.SALVAR_TURNO:
           return { ...state, turno: action.payload };
-        case actions.SALVAR_ID_PROCEDIMENTO:
-          return { ...state, procedimento: action.payload };
+        case actions.SALVAR_NOME:
+          return { ...state, nome: action.payload };
         default:
           return state;
       }

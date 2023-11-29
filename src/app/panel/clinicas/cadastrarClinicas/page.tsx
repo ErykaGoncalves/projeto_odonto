@@ -19,12 +19,13 @@ export default function CadastroClinicaPage(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
   const [snackBarMessage, setSnackBarMessage] = useState<string>('');
   const [autoHideDuration, setAutoHideDuration] = useState<number | null>(2000);
-  const [periodo, setPeriodo] = useState<string>('');
-  const [turno, setTurno] = useState<string>('');
-  const [id_procedimento, setIdProcedimento] = useState<object>({});
   const session = useSession();
-  const context = useContext(CadastroClinicaContext)
+  const context = useContext(CadastroClinicaContext);
 
+  // Utilize os estados locais aqui
+  const periodo = context?.state.periodo || '';
+  const turno = context?.state.turno || '';
+  const nome = context?.state.nome || '';
 
   const handleSaveContent = async (): Promise<void> => {
     try {
@@ -33,24 +34,23 @@ export default function CadastroClinicaPage(): JSX.Element {
       setSnackBarColor('loading');
       setSnackBarMessage('Carregando...');
       setAutoHideDuration(null);
-  
+      const nome = context?.state.nome;
+
+      if (nome === undefined || nome === null) {
+        // Lidar com o valor nulo ou indefinido
+        console.error('Erro: O nome é obrigatório.');
+        return;
+      }
       const response = await cadastroClinicaData({
-        periodo: context?.state.periodo,
-        turno: context?.state.turno,
-        id_procedimento: context?.state.procedimento,
+        periodo: periodo,
+        turno: turno,
+        nome: nome,
         jwt: session?.data?.jwt ?? '',
       });
 
-      // console.log(context?.state.periodo)
-      // console.log(context?.state.turno)
-      // console.log(context?.state.procedimento)
-
-      // console.log(response)
-
-
-      console.log('Periodo:', context?.state.periodo);
-      console.log('Turno:', context?.state.turno);
-      console.log('Procedimento ID:', context?.state.procedimento);
+      console.log('Periodo:', periodo);
+      console.log('Turno:', turno);
+      console.log('Procedimento ID:', nome);
 
       if (response) {
         if (response.error) {
@@ -122,9 +122,9 @@ export default function CadastroClinicaPage(): JSX.Element {
             <Box sx={{ mb: 2 }}>
               <SelectProcedimento
                 session={session}
-                procedimento={context?.state.procedimento}
+                procedimento={context?.state.nome}
                 setError={setError}
-                contextCallback={context?.salvarIdProcedimento && context.salvarIdProcedimento}
+                contextCallback={context?.salvarNome}
               />
             </Box>
             <Button

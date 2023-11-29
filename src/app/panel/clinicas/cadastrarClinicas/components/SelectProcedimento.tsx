@@ -17,20 +17,20 @@ interface BasicSelectProcedimentosProps {
   setError: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-const SelectProcedimento = ({ session, contextCallback, setError }: BasicSelectProcedimentosProps) => {
-  const [procedimento, setProcedimento] = useState<any[]>([]);
-  const [procedimentosCarregados, setProcedimentosCarregados] = useState(false);
-  const context = useContext(CadastroClinicaContext);
-  const [selectedProcedimento, setSelectedProcedimento] = useState<{ id: string; nome: string } | null>(null);
+const SelectProcedimento = ({ session }: BasicSelectProcedimentosProps) => {
+  const context = useContext(CadastroClinicaContext)
+  const [procedimento, setProcedimento] = useState<string[]>([]);
+  const [selectedProcedimento, setSelectedProcedimento] = React.useState('');
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         if (session.status === 'authenticated') {
-          const result = await ProcedimentoData({ jwt: session.data?.jwt ?? '', procedimento: selectedProcedimento });
-          const resultsArray = result.results;
-          setProcedimento(resultsArray);
-          setProcedimentosCarregados(true);
+          const result = await ProcedimentoData({ jwt: session.data?.jwt ?? '', nome: selectedProcedimento });
+          const resultsObject: Record<string, string> = result.results;
+          const extractedProced = Object.values(resultsObject);
+          context?.salvarNome(selectedProcedimento)
+          setProcedimento(extractedProced)
         }
       } catch (error) {
         console.error('Erro ao obter os dados:', error);
@@ -38,54 +38,46 @@ const SelectProcedimento = ({ session, contextCallback, setError }: BasicSelectP
     };
 
     fetchData();
-  }, [session, selectedProcedimento]);
+  }, [session, selectedProcedimento, context]);
 
-  const handleChange = (event: SelectChangeEvent) => {
-    const selectedProcedimentoId = event.target.value;
-    const selectedProcedimentoObject = procedimento.find((p) => p.id === selectedProcedimentoId);
-  
-    if (selectedProcedimentoObject) {
-      setSelectedProcedimento({
-        id: selectedProcedimentoId,
-        nome: selectedProcedimentoObject.nome,
-      });
-      context?.salvarIdProcedimento(selectedProcedimentoObject);
+    const handleChange = (event: SelectChangeEvent) => {
+      setSelectedProcedimento(event.target.value);
+      context?.salvarNome(event.target.value)
+    };
+
+    if (session.status === AUTHENTICATED) {
+      return (
+        <>
+          <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Procedimentos</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                onChange={handleChange}
+                value={selectedProcedimento}
+                label="Procedimentos"
+              >
+                {procedimento.map((proced) => (
+                  <MenuItem key={proced} value={proced}>
+                    {proced}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Box>
+        </>
+      );
     }
+
+    return (
+      <Skeleton
+        variant="rounded"
+        width="100%"
+        sx={{ maxWidth: '400px' }}
+        height={48}
+      />
+    );
   };
 
-  if (session.status === AUTHENTICATED) {
-    return (
-      <>
-        <Box sx={{ minWidth: 120 }}>
-          <FormControl fullWidth>
-            <InputLabel id="demo-simple-select-label">Procedimentos</InputLabel>
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={selectedProcedimento ? selectedProcedimento.id : ''}
-              label="Procedimentos"
-              onChange={handleChange}
-            >
-              {procedimentosCarregados && procedimento.map((proced) => (
-                <MenuItem key={proced.id} value={proced.id}>
-                  {proced.nome}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </Box>
-      </>
-    );
-  }
-
-  return (
-    <Skeleton
-      variant="rounded"
-      width="100%"
-      sx={{ maxWidth: '400px' }}
-      height={48}
-    />
-  );
-};
-
-export default SelectProcedimento;
+  export default SelectProcedimento;

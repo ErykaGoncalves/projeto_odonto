@@ -1,5 +1,5 @@
 export const initialState = {
   periodo: '',
   turno: '',
-  procedimento: ''
+  nome: ''
 }
