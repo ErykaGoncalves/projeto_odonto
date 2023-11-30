@@ -1,6 +1,6 @@
 interface IHistoricoProps {
     jwt: string
-    id_clinica: number[]
+    id_clinica: number
 }
 
 export default async function HistoricoClinicasData({

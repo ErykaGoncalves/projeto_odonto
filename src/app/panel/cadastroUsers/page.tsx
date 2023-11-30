@@ -29,7 +29,6 @@ export default function CadastroUsersPage(): JSX.Element {
   const handleNascimentoChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     const inputValue = e.target.value;
 
-    // Padrão de data "0000-00-00"
     const datePattern = /^\d{4}-\d{2}-\d{2}$/;
 
     if (datePattern.test(inputValue) || inputValue === '' || inputValue.length <= 10) {
@@ -71,10 +70,12 @@ export default function CadastroUsersPage(): JSX.Element {
         nome,
         jwt: session?.data?.jwt ?? '',
       })
-      if (response && response.error !== undefined && response.msgOriginal) {
-        if (response.error) {
+
+
+      if (response) {
+        if (response?.error) {
           setSnackBarColor('error');
-          setSnackBarMessage(response.msgUser ?? 'Prezado funcionário, ocorreu um erro, por favor, reinicie o sistema');
+          setSnackBarMessage(response?.msgUser ?? 'Prezado funcionário, ocorreu um erro, por favor, reinicie o sistema');
           setAutoHideDuration(null);
         } else {
           setNome('')
@@ -85,14 +86,15 @@ export default function CadastroUsersPage(): JSX.Element {
           setEndereco('')
 
           setSnackBarColor('success');
-          setSnackBarMessage(response.msgUser + ' Seu número de prontuário é: ' + response?.nro_prontuario ?? 'Sucesso ao cadastrar o usuário' + response?.nro_prontuario);
+          setSnackBarMessage(response?.msgUser + ' Seu número de prontuário é: ' + response?.nro_prontuario ?? 'Sucesso ao cadastrar o usuário' + response?.nro_prontuario);
         }
       } else {
         setSnackBarColor('error');
-        setSnackBarMessage(response?.msgUser ?? 'Erro ao processar a resposta da API');
+        setSnackBarMessage( 'Erro ao processar a resposta da API');
         setAutoHideDuration(null);
       }
     } catch (error) {
+      console.error(error);
       setSnackBarColor('error');
       setSnackBarMessage('Houve um erro ao salvar o cadastro do usuário.');
       setAutoHideDuration(null);

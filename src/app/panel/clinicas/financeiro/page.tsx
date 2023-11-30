@@ -15,10 +15,22 @@ import clinicasAllData from '@/services/financeiroClinica/clinicasAllData'
 import { useSession } from 'next-auth/react'
 import HistoricoClinicasData from '@/services/financeiroClinica/historicoClinicaData'
 import Snackbar from '@/components/Snackbar'
+import myTheme from '@/theme'
 
+type SessionDataItem = {
+    nome: string;
+    periodo: string
+    procedimento: string;
+    total_atendimentos: string
+    consultas_realizadas: string
+    consultas_nao_realizadas: string
+    valor_consulta: string;
+    total_valor_consultas_realizadas: string
+    // ... outras propriedades
+};
 
-const ITEM_HEIGHT = 48
-const ITEM_PADDING_TOP = 8
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
 const MenuProps = {
     PaperProps: {
         style: {
@@ -26,7 +38,7 @@ const MenuProps = {
             width: 250,
         },
     },
-}
+};
 
 function getStyles(name: string, personName: string[], theme: Theme) {
     return {
@@ -34,56 +46,46 @@ function getStyles(name: string, personName: string[], theme: Theme) {
             personName.indexOf(name) === -1
                 ? theme.typography.fontWeightRegular
                 : theme.typography.fontWeightMedium,
-    }
-
+    };
 }
 
-
 export default function MultipleSelect(): JSX.Element {
-    const [error, setError] = useState<string | null>(null)
-    const [snackBarActive, setSnackBarActive] = useState<boolean>(false)
-    const [snackBarColor, setSnackBarColor] = useState<AlertColor | 'loading'>('loading')
-    const [loading, setLoading] = useState<boolean>(false)
-    const [snackBarMessage, setSnackBarMessage] = useState<string>('')
-    const [autoHideDuration, setAutoHideDuration] = useState<number | null>(2000)
-    const [sessionData, setSessionData] = useState<any>(null)
-    const session = useSession()
-    const theme = useTheme()
-    const [personName, setPersonName] = React.useState<string[]>([])
-    const [clinicas, setClinicas] = React.useState<any[]>([])
-    const [id_clinica, setProcedimentoId] = useState<number | null>(null)
-    const [selectedProcedimentoId, setSelectedProcedimentoId] = React.useState<number[]>([]);
+    const [snackBarActive, setSnackBarActive] = useState<boolean>(false);
+    const [snackBarColor, setSnackBarColor] = useState<AlertColor | 'loading'>('loading');
+    const [snackBarMessage, setSnackBarMessage] = useState<string>('');
+    const [autoHideDuration, setAutoHideDuration] = useState<number | null>(2000);
+    const [sessionData, setSessionData] = useState<SessionDataItem[] | null>(null);
 
-
-
+    const session = useSession();
+    const theme = useTheme();
+    const [personName, setPersonName] = useState<string[]>([]);
+    const [clinicas, setClinicas] = useState<any[]>([]);
+    const [selectedProcedimentoId, setSelectedProcedimentoId] = useState<number[]>([]);
 
     useEffect(() => {
         const fetchData = async (): Promise<void> => {
             try {
                 if (session.status === 'authenticated') {
-
                     const response = await clinicasAllData({
                         jwt: session?.data?.jwt ?? '',
-                    })
-
+                    });
                     const nomesClinicas = response.results.map((clinica: any) => ({
                         id: clinica.id,
                         nome: clinica.nome,
-                    }))
+                        periodo: clinica.periodo
+                    }));
 
-                    setClinicas(nomesClinicas)
+                    setClinicas(nomesClinicas);
                 }
             } catch (error: any) {
-                setSnackBarColor('error')
-                setSnackBarMessage('Houve um erro ao mostrar as clínicas: ' + String(error))
-                setAutoHideDuration(null)
-            } finally {
-                setLoading(false)
+                setSnackBarColor('error');
+                setSnackBarMessage('Houve um erro ao mostrar as clínicas: ' + String(error));
+                setAutoHideDuration(null);
             }
-        }
+        };
 
-        fetchData()
-    }, [session])
+        fetchData();
+    }, [session]);
 
     const handleChange = (event: SelectChangeEvent<typeof personName>) => {
         const selectedIds = clinicas
@@ -92,38 +94,33 @@ export default function MultipleSelect(): JSX.Element {
 
         setPersonName(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value);
         setSelectedProcedimentoId(selectedIds);
-    }
-
+    };
 
     const handleHistoricoContent = async (): Promise<void> => {
         try {
-            setLoading(true);
-            setSnackBarActive(true);
-            setSnackBarColor('loading');
-            setSnackBarMessage('Carregando...');
-            setAutoHideDuration(null);
 
-            const response = await HistoricoClinicasData({
-                jwt: session?.data?.jwt ?? '',
-                id_clinica: selectedProcedimentoId,
+            const responsePromises = selectedProcedimentoId.map(async (clinicId) => {
+                const response = await HistoricoClinicasData({
+                    jwt: session?.data?.jwt ?? '',
+                    id_clinica: clinicId,
+                });
+                return response.result;
             });
 
-            if (response && !response.error) {
-                setSessionData(response.results)
-                setSnackBarColor('success')
-                setSnackBarMessage(response.msgUser)
-            } else {
-                setSnackBarColor('error')
-                setSnackBarMessage(response.msgUser)
-            }
-        } catch (error: any) {
-            setSnackBarColor('error')
-            setSnackBarMessage('Houve um erro ao mostrar o seu histórico: ' + String(error))
-        } finally {
-            setLoading(false)
-        }
-    }
+            const responses = await Promise.all(responsePromises);
+            const flattenedResults = responses.flat();
 
+            console.log('Results from multiple clinics:', flattenedResults);
+
+            setSnackBarColor('success');
+            setSessionData((prevState: SessionDataItem[] | null) =>
+                prevState ? [...prevState, ...flattenedResults] : flattenedResults
+            );
+        } catch (error: any) {
+            setSnackBarColor('error');
+            setSnackBarMessage('Houve um erro ao mostrar o seu histórico: ' + String(error));
+        }
+    };
 
     return (
         <>
@@ -171,7 +168,7 @@ export default function MultipleSelect(): JSX.Element {
                                         value={clinica.nome}
                                         style={getStyles(clinica.nome, personName, theme)}
                                     >
-                                        {clinica.nome}
+                                        {clinica.nome} - {clinica.periodo} PERIODO
                                     </MenuItem>
                                 ))}
                             </Select>
@@ -179,7 +176,7 @@ export default function MultipleSelect(): JSX.Element {
                         <Button
                             variant="contained"
                             color="primary"
-                            onClick={handleHistoricoContent}  // Alterado de onChange para onClick
+                            onClick={handleHistoricoContent}
                             style={{
                                 marginTop: '16px',
                                 background: '#cab3ff',
@@ -187,22 +184,37 @@ export default function MultipleSelect(): JSX.Element {
                         >
                             Pesquisar
                         </Button>
-                        {sessionData && (
-                            <Box sx={{ marginTop: '16px' }}>
-                                <Typography variant="h5">Resultados do Histórico:</Typography>
-                                <ul>
-                                    {sessionData.map((item: any, index: number) => (
-                                        <li key={index}>{/* Renderize os dados do histórico aqui */}</li>
+                        <Box sx={{ background: 'pink', margin: '20px' }}>
+                            {sessionData && (
+                                <Box sx={{ marginTop: '16px', padding: '20px' }}>
+                                    <Box sx={{background: myTheme.palette.primary.main, color: '#ffff'}}>
+                                        <Typography variant="h5">Resultados do Histórico:</Typography>
+                                    </Box>
+                                    {sessionData.map((item: SessionDataItem, index: number) => (
+                                        <Box key={index}>
+                                            <Typography variant="subtitle1" sx={{fontWeight: 'bold', color: '#fff'}}>{item.nome}</Typography>
+                                            <Typography variant="body1">Periodo: {item.periodo}</Typography>
+                                            <Typography variant="body1">Procedimento: {item.procedimento}</Typography>
+                                            <Typography variant="body1">Total de atendimento: {item.total_atendimentos}</Typography>
+                                            <Typography variant="body1">Consultas realizadas: {item.consultas_realizadas}</Typography>
+                                            <Typography variant="body1">Consultas não realizadas: {item.consultas_nao_realizadas}</Typography>
+                                            <Typography variant="body1">Valor da Consulta: {item.valor_consulta}</Typography>
+                                            <Typography variant="body1">Total do valor de consultas: {item.total_valor_consultas_realizadas}</Typography>
+                                           
+                                        </Box>
                                     ))}
-                                </ul>
-                            </Box>
-                        )}
+                                </Box>
+                            )}
+                        </Box>
                     </Box>
-                    <Box className={styles.imgPage} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                    <Box
+                        className={styles.imgPage}
+                        sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}
+                    >
                         <Image src={financeiro} alt="Fundo" width={650} height={700} />
                     </Box>
                 </Box>
             </Box>
         </>
-    )
+    );
 }
