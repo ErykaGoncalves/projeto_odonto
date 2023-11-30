@@ -9,5 +9,4 @@ export interface ICadastroClinica {
   nome: string
   periodo: string
   turno: string
-  id_procedimento: string
 }

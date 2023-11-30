@@ -1,73 +1,73 @@
   'use client'
-  import { AlertColor, Box, Button, Typography } from "@mui/material";
-  import React, { useContext, useEffect, useState } from "react";
+  import { AlertColor, Box, Button, Typography } from "@mui/material"
+  import React, { useContext, useEffect, useState } from "react"
   import Clinic from '../../../../../public/images/clinica.svg'
   import Image from 'next/image'
   import styles from '../../../../styles/page.module.css'
   import SelectPeriodo from './components/SelectPeriodo'
   import SelectHorario from './components/SelectTurnos'
   import SelectProcedimento from './components/SelectProcedimento'
-  import cadastroClinicaData from "@/services/cadastroClinica/cadastrarData";
-  import Snackbar from "@/components/Snackbar";
-  import { useSession } from "next-auth/react";
-  import { CadastroClinicaContext } from "@/context/cadastroClinica/CadastroClinicaContext";
+  import cadastroClinicaData from "@/services/cadastroClinica/cadastrarData"
+  import Snackbar from "@/components/Snackbar"
+  import { useSession } from "next-auth/react"
+  import { CadastroClinicaContext } from "@/context/cadastroClinica/CadastroClinicaContext"
 
   export default function CadastroClinicaPage(): JSX.Element {
-    const [error, setError] = useState<string | null>(null);
-    const [snackBarActive, setSnackBarActive] = useState<boolean>(false);
-    const [snackBarColor, setSnackBarColor] = useState<AlertColor | 'loading'>('loading');
-    const [loading, setLoading] = useState<boolean>(false);
-    const [snackBarMessage, setSnackBarMessage] = useState<string>('');
-    const [autoHideDuration, setAutoHideDuration] = useState<number | null>(2000);
-    const session = useSession();
-    const context = useContext(CadastroClinicaContext);
+    const [error, setError] = useState<string | null>(null)
+    const [snackBarActive, setSnackBarActive] = useState<boolean>(false)
+    const [snackBarColor, setSnackBarColor] = useState<AlertColor | 'loading'>('loading')
+    const [loading, setLoading] = useState<boolean>(false)
+    const [snackBarMessage, setSnackBarMessage] = useState<string>('')
+    const [autoHideDuration, setAutoHideDuration] = useState<number | null>(2000)
+    const session = useSession()
+    const context = useContext(CadastroClinicaContext)
 
     const handleSaveContent = async (): Promise<void> => {
-      const periodo = context?.state.periodo || '';
-      const turno = context?.state.turno || '';
-      const nome = context?.state.nome || '';
+      const periodo = context?.state.periodo || ''
+      const turno = context?.state.turno || ''
+      const nome = context?.state.nome || ''
       try {
-        setLoading(true);
-        setSnackBarActive(true);
-        setSnackBarColor('loading');
-        setSnackBarMessage('Carregando...');
-        setAutoHideDuration(null);
+        setLoading(true)
+        setSnackBarActive(true)
+        setSnackBarColor('loading')
+        setSnackBarMessage('Carregando...')
+        setAutoHideDuration(null)
 
         if (nome === undefined || nome === null) {
-          console.error('Erro: O nome é obrigatório.');
-          return;
+          console.error('Erro: O nome é obrigatório.')
+          return
         }
         const response = await cadastroClinicaData({
           periodo: periodo,
           turno: turno,
           nome: nome,
           jwt: session?.data?.jwt ?? '',
-        });
+        })
 
         if (response) {
           if (response.error) {
-            setSnackBarColor('error');
-            setSnackBarMessage(response.msgUser + error);
-            setAutoHideDuration(null);
+            setSnackBarColor('error')
+            setSnackBarMessage(response.msgUser + error)
+            setAutoHideDuration(null)
           } else {
-            setSnackBarColor('success');
-            setSnackBarMessage(response.msgUser);
+            setSnackBarColor('success')
+            setSnackBarMessage(response.msgUser)
           }
         }
       } catch (error: any) {
-        setSnackBarColor('error');
-        setSnackBarMessage('Houve um erro ao salvar o cadastro do usuário: ' + String(error));
-        setAutoHideDuration(null);
+        setSnackBarColor('error')
+        setSnackBarMessage('Houve um erro ao salvar o cadastro do usuário: ' + String(error))
+        setAutoHideDuration(null)
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
     useEffect(() => {
-      console.log(context?.state.periodo);
-      console.log(context?.state.nome);
-      console.log(context?.state.turno);
-    }, [context?.state.periodo, context?.state.nome, context?.state.turno]);
+      console.log(context?.state.periodo)
+      console.log(context?.state.nome)
+      console.log(context?.state.turno)
+    }, [context?.state.periodo, context?.state.nome, context?.state.turno])
     
 
     return (
@@ -143,5 +143,5 @@
           </Box>
         </Box >
       </>
-    );
+    )
   }
