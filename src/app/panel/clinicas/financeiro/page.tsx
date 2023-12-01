@@ -18,19 +18,19 @@ import Snackbar from '@/components/Snackbar'
 import myTheme from '@/theme'
 
 type SessionDataItem = {
-    nome: string;
+    nome: string
     periodo: string
-    procedimento: string;
+    procedimento: string
     total_atendimentos: string
     consultas_realizadas: string
     consultas_nao_realizadas: string
-    valor_consulta: string;
-    total_valor_consultas_realizadas: string
-    // ... outras propriedades
-};
+    valor_consulta: string
+    total_valor_consultas_pagas: string
+}
 
-const ITEM_HEIGHT = 48;
-const ITEM_PADDING_TOP = 8;
+
+const ITEM_HEIGHT = 48
+const ITEM_PADDING_TOP = 8
 const MenuProps = {
     PaperProps: {
         style: {
@@ -38,7 +38,7 @@ const MenuProps = {
             width: 250,
         },
     },
-};
+}
 
 function getStyles(name: string, personName: string[], theme: Theme) {
     return {
@@ -46,21 +46,21 @@ function getStyles(name: string, personName: string[], theme: Theme) {
             personName.indexOf(name) === -1
                 ? theme.typography.fontWeightRegular
                 : theme.typography.fontWeightMedium,
-    };
+    }
 }
 
 export default function MultipleSelect(): JSX.Element {
-    const [snackBarActive, setSnackBarActive] = useState<boolean>(false);
-    const [snackBarColor, setSnackBarColor] = useState<AlertColor | 'loading'>('loading');
-    const [snackBarMessage, setSnackBarMessage] = useState<string>('');
-    const [autoHideDuration, setAutoHideDuration] = useState<number | null>(2000);
-    const [sessionData, setSessionData] = useState<SessionDataItem[] | null>(null);
+    const [snackBarActive, setSnackBarActive] = useState<boolean>(false)
+    const [snackBarColor, setSnackBarColor] = useState<AlertColor | 'loading'>('loading')
+    const [snackBarMessage, setSnackBarMessage] = useState<string>('')
+    const [autoHideDuration, setAutoHideDuration] = useState<number | null>(2000)
+    const [sessionData, setSessionData] = useState<SessionDataItem[] | null>(null)
 
-    const session = useSession();
-    const theme = useTheme();
-    const [personName, setPersonName] = useState<string[]>([]);
-    const [clinicas, setClinicas] = useState<any[]>([]);
-    const [selectedProcedimentoId, setSelectedProcedimentoId] = useState<number[]>([]);
+    const session = useSession()
+    const theme = useTheme()
+    const [personName, setPersonName] = useState<string[]>([])
+    const [clinicas, setClinicas] = useState<any[]>([])
+    const [selectedProcedimentoId, setSelectedProcedimentoId] = useState<number[]>([])
 
     useEffect(() => {
         const fetchData = async (): Promise<void> => {
@@ -68,33 +68,33 @@ export default function MultipleSelect(): JSX.Element {
                 if (session.status === 'authenticated') {
                     const response = await clinicasAllData({
                         jwt: session?.data?.jwt ?? '',
-                    });
+                    })
                     const nomesClinicas = response.results.map((clinica: any) => ({
                         id: clinica.id,
                         nome: clinica.nome,
                         periodo: clinica.periodo
-                    }));
+                    }))
 
-                    setClinicas(nomesClinicas);
+                    setClinicas(nomesClinicas)
                 }
             } catch (error: any) {
-                setSnackBarColor('error');
-                setSnackBarMessage('Houve um erro ao mostrar as clínicas: ' + String(error));
-                setAutoHideDuration(null);
+                setSnackBarColor('error')
+                setSnackBarMessage('Houve um erro ao mostrar as clínicas: ' + String(error))
+                setAutoHideDuration(null)
             }
-        };
+        }
 
-        fetchData();
-    }, [session]);
+        fetchData()
+    }, [session])
 
     const handleChange = (event: SelectChangeEvent<typeof personName>) => {
         const selectedIds = clinicas
             .filter((clinica) => event.target.value.includes(clinica.nome))
-            .map((clinica) => clinica.id);
+            .map((clinica) => clinica.id)
 
-        setPersonName(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value);
-        setSelectedProcedimentoId(selectedIds);
-    };
+        setPersonName(typeof event.target.value === 'string' ? event.target.value.split(',') : event.target.value)
+        setSelectedProcedimentoId(selectedIds)
+    }
 
     const handleHistoricoContent = async (): Promise<void> => {
         try {
@@ -103,24 +103,24 @@ export default function MultipleSelect(): JSX.Element {
                 const response = await HistoricoClinicasData({
                     jwt: session?.data?.jwt ?? '',
                     id_clinica: clinicId,
-                });
-                return response.result;
-            });
+                })
+                return response.result
+            })
 
-            const responses = await Promise.all(responsePromises);
-            const flattenedResults = responses.flat();
+            const responses = await Promise.all(responsePromises)
+            const flattenedResults = responses.flat()
 
-            console.log('Results from multiple clinics:', flattenedResults);
+            console.log('Results from multiple clinics:', flattenedResults)
 
-            setSnackBarColor('success');
+            setSnackBarColor('success')
             setSessionData((prevState: SessionDataItem[] | null) =>
                 prevState ? [...prevState, ...flattenedResults] : flattenedResults
-            );
+            )
         } catch (error: any) {
-            setSnackBarColor('error');
-            setSnackBarMessage('Houve um erro ao mostrar o seu histórico: ' + String(error));
+            setSnackBarColor('error')
+            setSnackBarMessage('Houve um erro ao mostrar o seu histórico: ' + String(error))
         }
-    };
+    }
 
     return (
         <>
@@ -184,14 +184,11 @@ export default function MultipleSelect(): JSX.Element {
                         >
                             Pesquisar
                         </Button>
-                        <Box sx={{ background: 'pink', margin: '20px' }}>
+                        <Box>
                             {sessionData && (
-                                <Box sx={{ marginTop: '16px', padding: '20px' }}>
-                                    <Box sx={{background: myTheme.palette.primary.main, color: '#ffff'}}>
-                                        <Typography variant="h5">Resultados do Histórico:</Typography>
-                                    </Box>
+                                <Box sx={{ marginTop: '16px', padding: '20px', background: '#E5E5E5', borderRadius: '10px' }}>
                                     {sessionData.map((item: SessionDataItem, index: number) => (
-                                        <Box key={index}>
+                                        <Box key={index} sx={{ background: myTheme.palette.primary.main, padding: '20px', borderRadius: '10px', margin: '10px' }}>
                                             <Typography variant="subtitle1" sx={{fontWeight: 'bold', color: '#fff'}}>{item.nome}</Typography>
                                             <Typography variant="body1">Periodo: {item.periodo}</Typography>
                                             <Typography variant="body1">Procedimento: {item.procedimento}</Typography>
@@ -199,7 +196,7 @@ export default function MultipleSelect(): JSX.Element {
                                             <Typography variant="body1">Consultas realizadas: {item.consultas_realizadas}</Typography>
                                             <Typography variant="body1">Consultas não realizadas: {item.consultas_nao_realizadas}</Typography>
                                             <Typography variant="body1">Valor da Consulta: {item.valor_consulta}</Typography>
-                                            <Typography variant="body1">Total do valor de consultas: {item.total_valor_consultas_realizadas}</Typography>
+                                            <Typography variant="body1">Total do valor de consultas: {item.total_valor_consultas_pagas}</Typography>
                                            
                                         </Box>
                                     ))}
@@ -216,5 +213,5 @@ export default function MultipleSelect(): JSX.Element {
                 </Box>
             </Box>
         </>
-    );
+    )
 }
