@@ -14,6 +14,7 @@ import {
     IconButton,
     Menu,
     MenuItem,
+    Skeleton,
     Toolbar,
     Tooltip,
     Typography,
@@ -50,37 +51,45 @@ export default function HeaderLayout({
     openSideMenu,
     setSideOpenMenu
 }: any): JSX.Element {
-    const { data: session, status } = useSession()
-    const [data, setData] = useState(null);
-    const [error, setError] = useState(null);
-    const [openModal, setOpenModal] = React.useState(false)
-    const isMobile = useMediaQuery(theme.breakpoints.down('md'))
-    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
-    const openUserBtn = Boolean(anchorEl)
-
+    const session = useSession();
+    const [openModal, setOpenModal] = React.useState(false);
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+    const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
+    const openUserBtn = Boolean(anchorEl);
+    const [nomeFun, setNomeFun] = useState<string | undefined>(undefined);
     const handleClickUserBtn = (event: React.MouseEvent<HTMLElement>): void => {
-        setAnchorEl(event.currentTarget)
-    }
+        setAnchorEl(event.currentTarget);
+    };
+
     const handleCloseUserBtn = (): void => {
-        setAnchorEl(null)
-    }
+        setAnchorEl(null);
+    };
+
     const handleDrawerOpen = (): void => {
-        setSideOpenMenu(() => true)
-    }
+        setSideOpenMenu(() => true);
+    };
 
     const handleOpenModal = (): void => {
-        setOpenModal(true)
-    }
+        setOpenModal(true);
+    };
 
     useEffect(() => {
         if (isMobile) {
-            setSideOpenMenu(false)
+            setSideOpenMenu(false);
         }
-    }, [isMobile, setSideOpenMenu])
+    }, [isMobile, setSideOpenMenu]);
 
-    if (status !== "authenticated") {
-        return <div>Informações do usuário não encontradas.</div>;
-      }
+    useEffect(() => {
+        if (session.status === 'authenticated') {
+            const formatedName: string =
+                session.data.results[0].nome.split(' ')[0] ?? ''
+            setNomeFun(
+                () =>
+                    formatedName.charAt(0).toUpperCase() +
+                    formatedName.slice(1).toLocaleLowerCase()
+            )
+        }
+    }, [session])
     return (
         <>
             <AppBar
@@ -120,19 +129,31 @@ export default function HeaderLayout({
                             justifyContent: isMobile ? 'end' : 'space-between',
                         }}
                     >
-                        <Typography
-                            variant="h6"
-                            component="h2"
-                            gutterBottom
-                            sx={{
-                                fontWeight: 'bold',
-                                textTransform: 'capitalize',
-                                color: theme.palette.primary.main,
-                                display: isMobile ? 'none' : 'block'
-                            }}
-                        >
-                            Olá, {session.results[0].nome}!
-                        </Typography>
+                        {nomeFun === '' ? (
+                            <Skeleton
+                                variant="rounded"
+                                width={150}
+                                height={32}
+                                sx={{
+                                    mb: '8px',
+                                    display: isMobile ? 'none' : 'block'
+                                }}
+                            />
+                        ) : (
+                            <Typography
+                                variant="h6"
+                                component="h2"
+                                gutterBottom
+                                sx={{
+                                    fontWeight: 'bold',
+                                    textTransform: 'capitalize',
+                                    color: theme.palette.primary.main,
+                                    display: isMobile ? 'none' : 'block'
+                                }}
+                            >
+                                Olá, {nomeFun} !
+                            </Typography>
+                        )}
                         <Box sx={{ display: 'flex', alignItems: 'center' }}>
                             <Tooltip title="Meus dados">
                                 <IconButton
@@ -150,7 +171,7 @@ export default function HeaderLayout({
                                             textAlign: 'end',
                                         }}
                                     >
-                                         {session.results[0].nome[0]}
+                                        {session.data?.results[0].nome[0]}
                                     </Avatar>
                                 </IconButton>
                             </Tooltip>
