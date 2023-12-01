@@ -99,6 +99,8 @@ export default function MultipleSelect(): JSX.Element {
     const handleHistoricoContent = async (): Promise<void> => {
         try {
 
+            setSessionData(null);
+
             const responsePromises = selectedProcedimentoId.map(async (clinicId) => {
                 const response = await HistoricoClinicasData({
                     jwt: session?.data?.jwt ?? '',
@@ -168,7 +170,7 @@ export default function MultipleSelect(): JSX.Element {
                                         value={clinica.nome}
                                         style={getStyles(clinica.nome, personName, theme)}
                                     >
-                                        {clinica.nome} - {clinica.periodo} PERIODO
+                                        {clinica.nome}
                                     </MenuItem>
                                 ))}
                             </Select>
