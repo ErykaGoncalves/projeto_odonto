@@ -21,7 +21,7 @@ const nextAuthOptions: NextAuthOptions = {
           if (!credentials) {
             throw new Error('Credenciais não fornecidas');
           }
-          const response = await fetch('http://localhost:3001/login', {
+          const response = await fetch(`${process.env.NEXTAUTH_URL ?? ''}/login`, {
             method: 'POST',
             headers: {
               'Content-type': 'application/json'
