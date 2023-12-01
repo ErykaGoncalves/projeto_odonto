@@ -6,13 +6,11 @@ export default async function homeData({
   jwt
 }: IHomeProps) {
   try {
-    const apiUrl = 'http://localhost:3001/procedimentos'
+    const apiUrl = 'http://localhost:3001/procedimentos-home'
 
-    console.log(apiUrl)
     const headers = new Headers()
     headers.append('Authorization', `Bearer ${jwt}`)
 
-    console.log(apiUrl)
     const requestOptions: RequestInit = {
       method: 'GET',
       headers,

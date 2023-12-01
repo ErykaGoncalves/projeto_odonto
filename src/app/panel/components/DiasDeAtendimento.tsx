@@ -29,34 +29,30 @@ const columns: Column[] = [
   { id: 'nome', label: 'Procedimentos', minWidth: '100' },
 ];
 
-function createData(...values: (string | number)[]): Data {
-  const data: Data = {};
-  columns.forEach((column, index) => {
-    data[column.id] = values[index];
-  });
-  return data;
+function createData(dia: string, nome: string): Data {
+  return { dia, nome };
 }
 
 export default function StickyHeadTable() {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const { data: session, status } = useSession();
+  const session = useSession();
   const [rows, setRows] = useState<Data[]>([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (status === 'authenticated') {
-          const result = await homeData({ jwt: session?.jwt });
-          setRows(result.results.map((item: any, index: any) => createData(item.dia, item.nome, index)));
+        if (session.status === 'authenticated') {
+          const result = await homeData({ jwt: session.data?.jwt ?? '' });
+          setRows(result.results.map((item: any, index: any) => createData(item.dia, item.nome)));
         }
       } catch (error) {
         console.error('Erro ao obter os dados:', error);
       }
     };
-
+  
     fetchData();
-  }, [session, status]);
+  }, [session]);
 
   return (
     <Paper sx={{ width: '900px', overflow: 'hidden' }}>

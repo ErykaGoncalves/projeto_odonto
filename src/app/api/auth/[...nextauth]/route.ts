@@ -4,7 +4,8 @@ import { ICredentialsValue } from "@/types/next-auth";
 
 const nextAuthOptions: NextAuthOptions = {
   session: {
-    strategy: 'jwt'
+    strategy: 'jwt',
+    maxAge: 4 * 60 * 60
   },
   providers: [
     CredentialsProvider({
@@ -15,6 +16,7 @@ const nextAuthOptions: NextAuthOptions = {
       },
 
       async authorize(credentials: Record<"cod_user" | "password", string> | undefined): Promise<any> {
+        const { jwt } = credentials as ICredentialsValue
         try {
           if (!credentials) {
             throw new Error('Credenciais não fornecidas');
@@ -35,8 +37,6 @@ const nextAuthOptions: NextAuthOptions = {
           }
 
           const user = await response.json();
-
-          console.log(user);
 
           return user;
         } catch (error) {

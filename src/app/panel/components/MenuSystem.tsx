@@ -15,10 +15,8 @@ import RequestQuoteIcon from '@mui/icons-material/RequestQuote'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
 import LogoutIcon from '@mui/icons-material/Logout'
 import PersonAddAltIcon from '@mui/icons-material/PersonAddAlt'
-import ContactPhoneIcon from '@mui/icons-material/ContactPhone'
 import ExpandLessIcon from '@mui/icons-material/ExpandLess'
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore'
-import MonetizationOnIcon from '@mui/icons-material/MonetizationOn'
 import styles from '../../../styles/page.module.css'
 import EditNoteIcon from '@mui/icons-material/EditNote'
 import DomainIcon from '@mui/icons-material/Domain'
@@ -176,18 +174,6 @@ export default function MenuSystem({
                             </List>
                         </Collapse>
 
-                        <Link
-                            href='/panel/boletos'
-                            sx={{ color: '#fff', textDecoration: 'none' }}
-                        >
-                            <ListItemButton>
-                                <ListItemIcon sx={{ color: '#fff' }}>
-                                    <MonetizationOnIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Boletos" />
-                            </ListItemButton>
-                        </Link>
-
                         <ListItemButton
                             onClick={() => {
                                 handleClick('clinicas')
@@ -225,16 +211,6 @@ export default function MenuSystem({
                                 </Link>
                             </List>
                         </Collapse>
-
-                        <ListItemButton
-                            href="/panel/contato"
-                        >
-                            <ListItemIcon sx={{ color: '#fff' }}>
-                                <ContactPhoneIcon />
-                            </ListItemIcon>
-                            <ListItemText primary="Contato" />
-                        </ListItemButton>
-
                         <ListItemButton onClick={handleOpenModal}>
                             <ListItemIcon sx={{ color: '#fff' }}>
                                 <LogoutIcon />

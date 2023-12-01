@@ -33,7 +33,7 @@ export default async function cadastroUserData({
         email,
         endereco,
         telefone,
-        data_nasc: dataNasc, // Certifique-se de que a chave está correta
+        data_nasc: dataNasc,
         cpf,
         nome,
       }),
