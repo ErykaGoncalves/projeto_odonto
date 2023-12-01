@@ -24,6 +24,9 @@ import theme from '@/theme'
 import HomeIcon from '@mui/icons-material/Home'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft'
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import PersonSearchIcon from '@mui/icons-material/PersonSearch';
+import PeopleIcon from '@mui/icons-material/People';
+import FolderSharedIcon from '@mui/icons-material/FolderShared';
 import ModalLogout from './ModalLogout'
 
 const DrawerHeader = styled('div')(({ theme }) => ({
@@ -45,7 +48,8 @@ export default function MenuSystem({
         cadastro: false,
         agendamentos: false,
         configuracoes: false,
-        clinicas: false
+        clinicas: false,
+        users: false
     })
     const [openModal, setOpenModal] = React.useState(false)
     const isMobile = useMediaQuery('(max-width:850px)')
@@ -124,17 +128,55 @@ export default function MenuSystem({
                                 <ListItemText primary="Home" />
                             </ListItemButton>
                         </Link>
-                        <Link
-                            href="/panel/cadastroUsers"
-                            sx={{ color: '#fff', textDecoration: 'none' }}
+
+                        <ListItemButton
+                            onClick={() => {
+                                handleClick('users')
+                            }}
                         >
-                            <ListItemButton>
-                                <ListItemIcon sx={{ color: '#fff' }}>
-                                    <PersonAddAltIcon />
-                                </ListItemIcon>
-                                <ListItemText primary="Cadastro de Usuários" />
-                            </ListItemButton>
-                        </Link>
+                            <ListItemIcon sx={{ color: '#fff' }}>
+                                <PeopleIcon />
+                            </ListItemIcon>
+                            <ListItemText className="conteudoMenu" primary="Pacientes" />
+                            {openSubMenu.users ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                        </ListItemButton>
+                        <Collapse in={openSubMenu.users} timeout="auto" unmountOnExit>
+                            <List component="div" disablePadding>
+                                <Link
+                                    href="/panel/pacientes/cadastroUsers"
+                                    sx={{ color: '#fff', textDecoration: 'none' }}
+                                >
+                                    <ListItemButton sx={{ pl: 4 }}>
+                                        <ListItemIcon sx={{ color: '#fff' }}>
+                                            <PersonAddAltIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Cadastro de Pacientes" />
+                                    </ListItemButton>
+                                </Link>
+                                <Link
+                                    href="/panel/pacientes/historicoUsers"
+                                    sx={{ color: '#fff', textDecoration: 'none' }}
+                                >
+                                    <ListItemButton sx={{ pl: 4 }}>
+                                        <ListItemIcon sx={{ color: '#fff' }}>
+                                            <FolderSharedIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Historico de Pacientes" />
+                                    </ListItemButton>
+                                </Link>
+                                <Link
+                                    href="/panel/pacientes/buscaUsers"
+                                    sx={{ color: '#fff', textDecoration: 'none' }}
+                                >
+                                    <ListItemButton sx={{ pl: 4 }}>
+                                        <ListItemIcon sx={{ color: '#fff' }}>
+                                            <PersonSearchIcon />
+                                        </ListItemIcon>
+                                        <ListItemText primary="Buscar Paciente" />
+                                    </ListItemButton>
+                                </Link>
+                            </List>
+                        </Collapse>
 
                         <ListItemButton
                             onClick={() => {

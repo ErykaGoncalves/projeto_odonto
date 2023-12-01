@@ -1,10 +1,10 @@
 'use client'
 import { AlertColor, Box, Button, TextField, Typography, styled, useMediaQuery } from "@mui/material"
-import React, { useCallback, useState } from "react"
-import Users from '../../../../public/images/users.svg'
+import React, { useState } from "react"
+import Users from '../../../../../public/images/users.svg'
 import Image from 'next/image'
-import styles from '../../../styles/page.module.css'
-import Snackbar from '../../../components/Snackbar'
+import styles from '../../../../styles/page.module.css'
+import Snackbar from '../../../../components/Snackbar'
 import cadastroUserData from "@/services/cadastroUser/cadastroUserData"
 import { useSession } from "next-auth/react"
 

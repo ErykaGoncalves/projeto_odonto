@@ -1,6 +1,6 @@
 'use client'
 
-import { Box, Typography, Button, TextField, InputAdornment } from "@mui/material";
+import { Box, Typography, Button, TextField, InputAdornment, CircularProgress } from "@mui/material";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { SyntheticEvent, useState } from "react";
@@ -12,11 +12,13 @@ export default function HomeAuth() {
   const [codUser, setCodUser] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [loading, setLoading] = useState<boolean>(false)
 
   async function handleSubmit(event: SyntheticEvent) {
     event.preventDefault();
 
     try {
+      setLoading(() => true)
       const response = await signIn('credentials', {
         redirect: false,
         cod_user: codUser,
@@ -132,8 +134,13 @@ export default function HomeAuth() {
               }
             }}
             type="submit"
+            disabled={loading}
           >
-            Entrar
+            {loading ? (
+                  <CircularProgress size={24} />
+                ) : (
+                  'Entrar'
+                )}
           </Button>
         </form>
       </Box>

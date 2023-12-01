@@ -16,20 +16,20 @@ export default function CadastroUsersPage(): JSX.Element {
           <Typography sx={{ mb: 2 }}>
             Por favor, informe os dados do paciente abaixo para verificar seu histórico de consultas.
           </Typography>
-              <Box sx={{ padding: '50px' }}>
-                  <Box sx={{ mb: 2 }}>
-                    <TextField
-                      name="numeroProntuario"
-                      label="Número de Prontuário ou CPF"
-                      variant="outlined"
-                      className={styles.lineForm}
-                      sx={{ width: '800px' }}
-                    />
-                  </Box>
-                  <Button type="submit" variant="contained" color="primary" style={{ marginTop: '16px', background: '#cab3ff' }}>
-                    Pesquisar
-                  </Button>
-              </Box>
+          <Box sx={{ padding: '50px' }}>
+            <Box sx={{ mb: 2 }}>
+              <TextField
+                name="numeroProntuario"
+                label="Número de Prontuário ou CPF"
+                variant="outlined"
+                className={styles.lineForm}
+                sx={{ width: '800px' }}
+              />
+            </Box>
+            <Button type="submit" variant="contained" color="primary" style={{ marginTop: '16px', background: '#cab3ff' }}>
+              Pesquisar
+            </Button>
+          </Box>
         </Box>
         <Box className={styles.imgPage} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
           <Image src={Users} alt="Fundo" width={650} height={800} />
