@@ -17,7 +17,7 @@ export default async function HistoricoUsersData({
             redirect: 'follow',
             cache: 'no-cache'
         }
-        const apiUrl = `http://localhost:3001/historico-paciente?info=${info} `
+        const apiUrl = `http://localhost:3001/historico-paciente?info=${info}`
 
 
 

@@ -1,8 +1,6 @@
 'use client'
 import { Box, Button, TextField, Typography } from "@mui/material";
 import React from "react";
-import Users from '../../../../../public/images/agendamento.svg'
-import Image from 'next/image'
 import styles from '../../../../styles/page.module.css'
 
 export default function CadastroUsersPage(): JSX.Element {
@@ -30,9 +28,6 @@ export default function CadastroUsersPage(): JSX.Element {
                     Pesquisar
                   </Button>
               </Box>
-        </Box>
-        <Box className={styles.imgPage} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-          <Image src={Users} alt="Fundo" width={650} height={800} />
         </Box>
       </Box >
     </>

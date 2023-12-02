@@ -1,8 +1,6 @@
 'use client'
 import { AlertColor, Box, Button, TextField, Typography, styled, useMediaQuery } from "@mui/material"
 import React, { useState } from "react"
-import Users from '../../../../../public/images/users.svg'
-import Image from 'next/image'
 import styles from '../../../../styles/page.module.css'
 import Snackbar from '../../../../components/Snackbar'
 import cadastroUserData from "@/services/cadastroUser/cadastroUserData"
@@ -198,10 +196,6 @@ export default function CadastroUsersPage(): JSX.Element {
               Cadastrar
             </Button>
           </Box>
-        </Box>
-        <Box
-          className={styles.imgPage} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-          <Image src={Users} alt="Fundo" width={650} height={800} />
         </Box>
       </Box >
     </>

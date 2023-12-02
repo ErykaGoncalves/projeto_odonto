@@ -1,8 +1,6 @@
   'use client'
   import { AlertColor, Box, Button, Typography } from "@mui/material"
   import React, { useContext, useEffect, useState } from "react"
-  import Clinic from '../../../../../public/images/clinica.svg'
-  import Image from 'next/image'
   import styles from '../../../../styles/page.module.css'
   import SelectPeriodo from './components/SelectPeriodo'
   import SelectHorario from './components/SelectTurnos'
@@ -138,9 +136,6 @@
                 Cadastrar
               </Button>
             </Box>
-          </Box>
-          <Box className={styles.imgPage} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-            <Image src={Clinic} alt="Fundo" width={650} height={800} />
           </Box>
         </Box >
       </>

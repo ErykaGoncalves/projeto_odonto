@@ -3,10 +3,7 @@ import React from "react";
 import { Box, Typography, useMediaQuery } from "@mui/material";
 import '../../styles/page.module.css';
 import ListaAtendimentosDiarios from "./components/DiasDeAtendimento";
-import Image from "next/image";
-import Dashboard from '../../../public/images/dashboard.svg';
 import theme from "@/theme";
-import styles from '../../styles/page.module.css'
 
 export default function Panel(): JSX.Element {
     const isMobile = useMediaQuery('(max-width:1500px)');
@@ -46,15 +43,6 @@ export default function Panel(): JSX.Element {
                     <Box sx={{ display: isMobile ? 'block' : 'flex'}}>
                         <Box sx={{ display: isMobile ? 'none' : 'block', mt: '80px' }}>
                             <ListaAtendimentosDiarios />
-                        </Box>
-                        <Box className={styles.imgPage} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
-                            <Image
-                                src={Dashboard}
-                                width={isMobile ? 600 : 650}
-                                height={isMobile ? 600 : 700}
-                                style={{ display: isMobile ? 'none' : 'block' }}
-                                alt="Imagem representativa"
-                            />
                         </Box>
                     </Box>
                 </Box>
