@@ -3,7 +3,7 @@ import { AlertColor, Box, Button, TextField, Typography } from "@mui/material";
 import React, { useState } from "react";
 import Snackbar from "@/components/Snackbar";
 import styles from "../../../../styles/page.module.css";
-import HistoricoUsersData from "@/services/cadastroUser/historicoUsersData";
+import HistoricoUsersData from "@/services/pacientes/historicoUsersData";
 import { useSession } from "next-auth/react";
 import myTheme from "@/theme";
 

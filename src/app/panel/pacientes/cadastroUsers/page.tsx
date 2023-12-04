@@ -3,7 +3,7 @@ import { AlertColor, Box, Button, TextField, Typography, styled, useMediaQuery }
 import React, { useState } from "react"
 import styles from '../../../../styles/page.module.css'
 import Snackbar from '../../../../components/Snackbar'
-import cadastroUserData from "@/services/cadastroUser/cadastroUserData"
+import cadastroUserData from "@/services/pacientes/cadastroUserData"
 import { useSession } from "next-auth/react"
 
 
