@@ -14,7 +14,7 @@ export default async function cadastroClinicaData({
   jwt,
 }: ICadastroClinicaProps): Promise<ICadastroClinicaResponse | null> {
   try {
-    const apiUrl = `${process.env.NEXT_PUBLIC_API ?? '' }/clinica`
+    const apiUrl = `http://odonto-unitri.ddns.net/odonto/clinica`
 
     const requestOptions: RequestInit = {
       method: 'POST',

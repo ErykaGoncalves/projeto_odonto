@@ -7,7 +7,7 @@ export default async function ProcedimentoData({
     jwt
 }: IProcedimentoProps) {
     try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_API ?? '' }/procedimentos`
+        const apiUrl = `http://odonto-unitri.ddns.net/odonto/procedimentos`
         
         const headers = new Headers()
         headers.append('Authorization', `Bearer ${jwt}`)

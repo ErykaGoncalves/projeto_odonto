@@ -16,8 +16,7 @@ export default async function agendarConsultaData({
     jwt,
 }: ICadastroClinicaProps): Promise<IAgendamentoResponse | null> {
     try {
-        /*const apiUrl = `${process.env.NEXT_PUBLIC_API ?? '' }/clinica`*/
-        const apiUrl = 'http://localhost:3001/agendamento'
+        const apiUrl = `http://odonto-unitri.ddns.net/odonto/clinica`
 
         const requestOptions: RequestInit = {
             method: 'POST',

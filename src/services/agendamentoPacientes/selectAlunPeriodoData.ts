@@ -17,8 +17,7 @@ export default async function SelectAlunPeriodoData({
             redirect: 'follow',
             cache: 'no-cache'
         }
-        const apiUrl = `http://localhost:3001/alunos-clinica?nome_clinica=${nome_clinica}`
-        /*const apiUrl = `${process.env.NEXT_PUBLIC_API ?? '' }/alunos-clinica?nome_clinica=${nome_clinica}`*/
+        const apiUrl = `http://odonto-unitri.ddns.net/odonto/alunos-clinica?nome_clinica=${nome_clinica}`
 
         console.log(apiUrl)
 

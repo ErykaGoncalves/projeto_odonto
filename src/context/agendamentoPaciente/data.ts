@@ -5,6 +5,6 @@ export const initialState = {
   alunos: '',
   paciente: '',
   idPaciente: '',
-  alunoId: '', // Adicione esta linha
-  pacienteId: '', // Adicione esta linha
+  alunoId: '', 
+  pacienteId: '', 
 }

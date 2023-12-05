@@ -7,7 +7,7 @@ export default async function periodoData({
     jwt
 }: IPeriodoProps) {
     try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_API ?? '' }/periodos`
+        const apiUrl = `http://odonto-unitri.ddns.net/odonto/periodos`
 
         const headers = new Headers()
         headers.append('Authorization', `Bearer ${jwt}`)

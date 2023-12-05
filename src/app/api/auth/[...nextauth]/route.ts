@@ -21,7 +21,7 @@ const nextAuthOptions: NextAuthOptions = {
           if (!credentials) {
             throw new Error('Credenciais não fornecidas');
           }
-          const response = await fetch(`${process.env.NEXTAUTH_URL ?? ''}/login`, {
+          const response = await fetch(`http://odonto-unitri.ddns.net/odonto/login`, {
             method: 'POST',
             headers: {
               'Content-type': 'application/json'
@@ -40,7 +40,7 @@ const nextAuthOptions: NextAuthOptions = {
 
           return user;
         } catch (error) {
-          console.error('Erro na requisição:', error);
+          console.error('Erro na requisição');
           return null;
         }
       },

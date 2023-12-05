@@ -13,13 +13,13 @@ import Snackbar from '@/components/Snackbar'
 interface ModalAtualizarProps {
     openModal: boolean;
     setOpenModal: (value: boolean) => void;
-    userId?: number; // userId é agora opcional
+    userId?: number;
 }
 
 export default function ModalAtualizar({
     openModal,
     setOpenModal,
-    userId, // userId é agora opcional
+    userId,
 }: ModalAtualizarProps): JSX.Element {
     const [snackBarActive, setSnackBarActive] = useState<boolean>(false);
     const [snackBarColor, setSnackBarColor] = useState<AlertColor | "loading">(
@@ -28,7 +28,7 @@ export default function ModalAtualizar({
     const [snackBarMessage, setSnackBarMessage] = useState<string>("");
     const [autoHideDuration, setAutoHideDuration] = useState<number | null>(2000);
     const [loading, setLoading] = useState<boolean>(false);
-    const [selectedUserData, setSelectedUserData] = useState<any | null>(null); // Adicione esta linha
+    const [selectedUserData, setSelectedUserData] = useState<any | null>(null);
 
     const [id, setId] = useState<number>()
     const [nome, setNome] = useState<string>('')
@@ -43,7 +43,6 @@ export default function ModalAtualizar({
     const handleCloseModal = () => setOpenModal(false);
 
     React.useEffect(() => {
-        // Atualiza os estados iniciais com os dados do usuário selecionado
         if (selectedUserData) {
             setId(selectedUserData.id);
             setNome(selectedUserData.nome);

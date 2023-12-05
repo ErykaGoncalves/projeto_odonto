@@ -17,8 +17,7 @@ export default async function SelectHorarioData({
             redirect: 'follow',
             cache: 'no-cache'
         }
-        const apiUrl = `http://localhost:3001/horario?nome_clinica=${nome_clinica}`
-        /*const apiUrl = `${process.env.NEXT_PUBLIC_API ?? ''}/horario?nome_clinica=${nome_clinica}`*/
+        const apiUrl = `${process.env.NEXT_PUBLIC_API ?? ''}/horario?nome_clinica=${nome_clinica}`
 
         console.log(apiUrl)
 

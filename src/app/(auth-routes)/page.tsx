@@ -32,7 +32,7 @@ export default function HomeAuth() {
 
       router.replace('/panel');
     } catch (error) {
-      console.error('Erro ao fazer login:', error);
+      console.error('Erro ao fazer login');
       setErrorMessage("Ocorreu um erro durante o login. Tente novamente mais tarde.");
     }
   }

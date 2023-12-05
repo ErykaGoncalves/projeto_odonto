@@ -36,7 +36,7 @@ const SelectAlunos = ({ session, clinica, setError, contextCallback }: BasicSele
           const response = await selectAlunPeriodoData({ jwt: session.data?.jwt ?? '', nome_clinica: clinica });
    
           if (response.result) {
-            const namesArray = response.result.map((aluno: any) => aluno.nome); // Mapear apenas os nomes
+            const namesArray = response.result.map((aluno: any) => aluno.nome);
             
             setAlunPeriods(namesArray);
           } else {

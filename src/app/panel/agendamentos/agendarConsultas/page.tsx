@@ -26,7 +26,7 @@ export default function BuscaUsersPage(): JSX.Element {
   const handleOpenModalAtualizar = (idPaciente: string): void => {
     context?.salvarPaciente(info, idPaciente);
     setOpenModalAgendar(true);
-    context?.salvarPacienteModal(idPaciente); // Adicione esta linha
+    context?.salvarPacienteModal(idPaciente);
 };
   const handleSearchContent = async (): Promise<void> => {
     try {

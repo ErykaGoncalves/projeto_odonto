@@ -55,7 +55,7 @@ export default function ModalAtualizar({
         if (context && context.state) {
             setAlunoId(context.state.alunoId || '');
             setPacienteId(context.state.pacienteId || '');
-            setPacienteIdModal(context.state.pacienteId || ''); // Adicione esta linha
+            setPacienteIdModal(context.state.pacienteId || '');
         }
     }, [context]);
 
@@ -67,11 +67,9 @@ export default function ModalAtualizar({
             setSnackBarMessage('Carregando...');
             setAutoHideDuration(null);
     
-            // Certifique-se de que os dados do aluno e paciente estão no contexto
             const alunoId: string | undefined = context?.state.alunoId;
             const pacienteId: string | undefined = context?.state.pacienteId;
     
-            // Certifique-se de que outros campos obrigatórios estão preenchidos
             if (!nome_clinica || !horario_consulta || !alunoId || !pacienteId) {
                 throw new Error("Preencha todos os campos obrigatórios.");
             }
