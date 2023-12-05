@@ -180,7 +180,7 @@ export default function MultipleSelect(): JSX.Element {
                       </Box>
                     )}
                     MenuProps={MenuProps}
-                    sx={{ width: "800px" }}
+                    sx={{ width: "100%" }}
                   >
                     {clinicas.map((clinica) => (
                       <MenuItem

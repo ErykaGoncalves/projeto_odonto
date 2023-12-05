@@ -3,7 +3,7 @@ interface IAlunPeriodoProps {
     nome_clinica: string
 }
 
-export default async function SelectAlunPeriodoData({
+export default async function SelectClinicasData({
     jwt,
 }: IAlunPeriodoProps) {
     try {
@@ -16,8 +16,8 @@ export default async function SelectAlunPeriodoData({
             redirect: 'follow',
             cache: 'no-cache'
         }
-        const apiUrl = `${process.env.NEXT_PUBLIC_API ?? '' }/clinicas`
-
+        const apiUrl = 'http://localhost:3001/clinicas'
+        /**const apiUrl = `${process.env.NEXT_PUBLIC_API ?? '' }/clinicas` */
         const data = await fetch(apiUrl, requestOptions)
         const jsonData = await data.json()
         return jsonData

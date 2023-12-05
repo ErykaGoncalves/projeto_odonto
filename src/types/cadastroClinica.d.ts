@@ -6,7 +6,8 @@ export interface ICadastroClinicaResponse extends IDefaultResponse {
 }
 
 export interface ICadastroClinica {
-  nome: string
-  periodo: string
-  turno: string
+  nome_clinica: string | undefined;
+  horario_consulta: string | undefined;
+  paciente_id: string | undefined;
+  aluno_id: string | undefined;
 }

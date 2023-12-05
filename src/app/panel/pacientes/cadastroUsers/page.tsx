@@ -128,7 +128,7 @@ export default function CadastroUsersPage(): JSX.Element {
                 required
                 variant="outlined"
                 className={styles.lineForm}
-                sx={{ width: '800px' }}
+                sx={{ width: '100%' }}
                 value={nome}
                 onChange={(e) => setNome(e.target.value)}
               />
@@ -139,7 +139,7 @@ export default function CadastroUsersPage(): JSX.Element {
                 label="CPF"
                 variant="outlined"
                 className={styles.lineForm}
-                sx={{ width: '800px' }}
+                sx={{ width: '100%' }}
                 value={cpf}
                 onChange={(e) => setCpf(e.target.value)}
               />
@@ -150,7 +150,7 @@ export default function CadastroUsersPage(): JSX.Element {
                 label="Data de nascimento"
                 type='date'
                 variant="outlined"
-                sx={{ width: '800px' }}
+                sx={{ width: '100%' }}
                 value={nascimento}
                 onChange={handleNascimentoChange}
               />
@@ -161,7 +161,7 @@ export default function CadastroUsersPage(): JSX.Element {
                 label="Email"
                 variant="outlined"
                 className={styles.lineForm}
-                sx={{ width: '800px' }}
+                sx={{ width: '100%' }}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -172,7 +172,7 @@ export default function CadastroUsersPage(): JSX.Element {
                 label="Telefone"
                 variant="outlined"
                 className={styles.lineForm}
-                sx={{ width: '800px' }}
+                sx={{ width: '100%' }}
                 value={telefone}
                 onChange={(e) => setTelefone(e.target.value)}
               />
@@ -183,7 +183,7 @@ export default function CadastroUsersPage(): JSX.Element {
                 label="Endereço"
                 variant="outlined"
                 className={styles.lineForm}
-                sx={{ width: '800px' }}
+                sx={{ width: '100%' }}
                 value={endereco}
                 onChange={(e) => setEndereco(e.target.value)}
               />

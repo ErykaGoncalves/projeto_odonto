@@ -1,12 +1,13 @@
 "use client";
 import { AlertColor, Box, Button, TextField, Typography } from "@mui/material";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import Snackbar from "@/components/Snackbar";
 import styles from "../../../../styles/page.module.css";
 import { useSession } from "next-auth/react";
 import myTheme from "@/theme";
 import BuscaUsersData from "@/services/pacientes/buscaUserData";
 import ModalAgendarConsulta from "./components/ModalAgendarConsulta";
+import { AgendamentoPacienteContext } from "@/context/agendamentoPaciente/AgendamentoPacienteContext";
 
 export default function BuscaUsersPage(): JSX.Element {
   const [snackBarActive, setSnackBarActive] = useState<boolean>(false);
@@ -20,10 +21,13 @@ export default function BuscaUsersPage(): JSX.Element {
   const [historico, setHistorico] = useState<Array<any>>([]);
   const [openModalAgendar, setOpenModalAgendar] = React.useState(false);
   const session = useSession();
+  const context = useContext(AgendamentoPacienteContext)
 
-  const handleOpenModalAtualizar = (): void => {
+  const handleOpenModalAtualizar = (idPaciente: string): void => {
+    context?.salvarPaciente(info, idPaciente);
     setOpenModalAgendar(true);
-  };
+    context?.salvarPacienteModal(idPaciente); // Adicione esta linha
+};
   const handleSearchContent = async (): Promise<void> => {
     try {
       if (info.trim() === "") {
@@ -84,7 +88,7 @@ export default function BuscaUsersPage(): JSX.Element {
                 className={styles.lineForm}
                 value={info}
                 onChange={(e) => setInfo(e.target.value)}
-                sx={{ width: "800px" }}
+                sx={{ width: "100%" }}
               />
             </Box>
             <Button
@@ -135,9 +139,9 @@ export default function BuscaUsersPage(): JSX.Element {
                     <Button
                       variant="contained"
                       color="primary"
-                      onClick={handleOpenModalAtualizar}
+                      onClick={() => handleOpenModalAtualizar(item.pacienteId)}
                       style={{
-                        background: myTheme.palette.primary.dark
+                        background: myTheme.palette.primary.dark,
                       }}
                     >
                       Agendar

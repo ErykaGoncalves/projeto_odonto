@@ -17,7 +17,8 @@ export default async function BuscarPacienteData({
             redirect: 'follow',
             cache: 'no-cache'
         }
-        const apiUrl = `${process.env.NEXT_PUBLIC_API ?? '' }/get-user?info=${info}`
+        const apiUrl = `http://localhost:3001/get-user?info=${info}`
+        /*const apiUrl = `${process.env.NEXT_PUBLIC_API ?? '' }/get-user?info=${info}`*/
         console.log(apiUrl)
 
         const data = await fetch(apiUrl, requestOptions)

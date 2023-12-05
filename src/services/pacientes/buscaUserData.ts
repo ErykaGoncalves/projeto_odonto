@@ -8,9 +8,6 @@ export default async function BuscaUsersData({
     info
 }: IBuscaUsersProps) {
     try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_API ?? ''
-            }/get-user?info=${info}`
-
         const headers = new Headers()
         headers.append('Authorization', `Bearer ${jwt}`)
 
@@ -20,6 +17,10 @@ export default async function BuscaUsersData({
             redirect: 'follow',
             cache: 'no-cache'
         }
+        const apiUrl = `http://localhost:3001/get-user?info=${info}`
+        /* const apiUrl = `${process.env.NEXT_PUBLIC_API ?? '' 
+     }/get-user?info=${info}`*/
+
         console.log(apiUrl)
 
         const data = await fetch(apiUrl, requestOptions)

@@ -13,38 +13,43 @@ import { AgendamentoPacienteContext } from '@/context/agendamentoPaciente/Agenda
 interface BasicSelectProps {
   contextCallback?: (payload: string) => void;
   session: any;
-  alunos: string | undefined
+  alunos: string | undefined;
+  clinica: string;
   setError: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
 
-const SelectAlunos = ({ session }: BasicSelectProps): JSX.Element => {
+const SelectAlunos = ({ session, clinica, setError, contextCallback }: BasicSelectProps): JSX.Element => {
   const context = useContext(AgendamentoPacienteContext);
   const [alunPeriods, setAlunPeriods] = useState<string[]>([]);
   const [selectAlun, setSelectAlun] = useState<string>('')
 
-  useEffect(() => {
+  const handleChange = (event: SelectChangeEvent) => {
+    setSelectAlun(event.target.value);
+    context?.salvarAlunos(event.target.value);
+  };
+
+   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (session.status === 'authenticated') {
-          const result = await selectAlunPeriodoData({ jwt: session.data?.jwt ?? '', nome_clinica: selectAlun });
-          const resultsObject: Record<string, string> = result.results;
-          const extractedPeriods = Object.values(resultsObject);
-          context?.salvarAlunos(selectAlun)
-          setAlunPeriods(extractedPeriods);
+        if (session.status === 'authenticated' && clinica !== undefined) {
+          const response = await selectAlunPeriodoData({ jwt: session.data?.jwt ?? '', nome_clinica: clinica });
+   
+          if (response.result) {
+            const namesArray = response.result.map((aluno: any) => aluno.nome); // Mapear apenas os nomes
+            
+            setAlunPeriods(namesArray);
+          } else {
+            console.log('DEU ERROOOOO');
+          }
         }
       } catch (error) {
         console.error('Erro ao obter os dados:', error);
       }
     };
-
+  
     fetchData();
-  }, [session, selectAlun, context]);
-
-  const handleChange = () => {
-    setSelectAlun('');
-    context?.salvarAlunos('');
-  };
+  }, [session, clinica, context]);
 
   if (session.status === AUTHENTICATED) {
     return (
@@ -59,9 +64,9 @@ const SelectAlunos = ({ session }: BasicSelectProps): JSX.Element => {
               value={selectAlun}
               label="Periodo"
             >
-              {alunPeriods.map((alunos) => (
-                <MenuItem key={alunos} value={alunos}>
-                  {alunos}
+              {alunPeriods.map((aluno) => (
+                <MenuItem key={aluno} value={aluno}>
+                  {aluno}
                 </MenuItem>
               ))}
             </Select>
@@ -81,4 +86,4 @@ const SelectAlunos = ({ session }: BasicSelectProps): JSX.Element => {
   );
 };
 
-export default SelectAlunos
+export default SelectAlunos;

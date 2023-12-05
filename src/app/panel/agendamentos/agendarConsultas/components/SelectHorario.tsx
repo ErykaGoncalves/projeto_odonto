@@ -8,31 +8,45 @@ import selectHorarioData from '@/services/agendamentoPacientes/selectHorarioData
 import { useContext, useEffect, useState } from 'react';
 import { AUTHENTICATED } from '@/utils/constants';
 import { Skeleton } from '@mui/material';
-import { useSession } from 'next-auth/react';
 import { AgendamentoPacienteContext } from '@/context/agendamentoPaciente/AgendamentoPacienteContext';
 
 interface BasicSelectProps {
   contextCallback?: (payload: string) => void;
   session: any;
-  horario: string | undefined
+  horario: string | undefined;
+  clinica: string;
   setError: React.Dispatch<React.SetStateAction<string | null>>;
 }
 
-
-export default function SelectHorario({session}: BasicSelectProps): JSX.Element {
+export default function SelectHorario({ session, clinica, setError, contextCallback }: BasicSelectProps): JSX.Element {
   const context = useContext(AgendamentoPacienteContext);
   const [agendaHorario, setAgendaHorario] = useState<string[]>([]);
   const [selectHorario, setSelectHorario] = useState<string>('')
 
+  const handleChange = (event: SelectChangeEvent) => {
+    setSelectHorario(event.target.value);
+    context?.salvarHorario(event.target.value);
+  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
-        if (session.status === 'authenticated') {
-          const result = await selectHorarioData({ jwt: session.data?.jwt ?? '', nome_clinica: selectHorario });
-          const resultsObject: Record<string, string> = result.results;
-          const extractedPeriods = Object.values(resultsObject);
-          context?.salvarHorario(selectHorario)
-          setAgendaHorario(extractedPeriods);
+        if (session.status === 'authenticated' && clinica !== undefined) {
+          const response = await selectHorarioData({ jwt: session.data?.jwt ?? '', nome_clinica: clinica });
+          console.log('HORARIOOOOO' + response)
+          if (response.result) {
+            let resultArray = [];
+
+            if (Array.isArray(response.result)) {
+              resultArray = response.result;
+            } else {
+              resultArray = Object.values(response.result);
+            }
+
+            setAgendaHorario(resultArray);
+          } else {
+            console.log('DEU ERROOOOO');
+          }
         }
       } catch (error) {
         console.error('Erro ao obter os dados:', error);
@@ -40,12 +54,7 @@ export default function SelectHorario({session}: BasicSelectProps): JSX.Element 
     };
 
     fetchData();
-  }, [session, selectHorario, context]);
-
-  const handleChange = (event: SelectChangeEvent) => {
-    setSelectHorario(event.target.value);
-    context?.salvarHorario(event.target.value);
-  };
+  }, [session, clinica, context]);
 
   if (session.status === AUTHENTICATED) {
     return (

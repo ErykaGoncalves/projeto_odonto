@@ -8,7 +8,6 @@ import selectDatasData from '@/services/agendamentoPacientes/selectDatasData';
 import { useContext, useEffect, useState } from 'react';
 import { AUTHENTICATED } from '@/utils/constants';
 import { Skeleton } from '@mui/material';
-import { useSession } from 'next-auth/react';
 import { AgendamentoPacienteContext } from '@/context/agendamentoPaciente/AgendamentoPacienteContext';
 
 interface BasicSelectProps {
@@ -26,7 +25,7 @@ export default function SelectData({ session, clinica, setError, contextCallback
 
   const handleChange = (event: SelectChangeEvent) => {
     setSelectData(event.target.value);
-    context?.salvarClinica(event.target.value);
+    context?.salvarData(event.target.value);
   };
 
    useEffect(() => {
@@ -34,7 +33,7 @@ export default function SelectData({ session, clinica, setError, contextCallback
       try {
         if (session.status === 'authenticated' && clinica !== undefined) {
           const response = await selectDatasData({ jwt: session.data?.jwt ?? '', nome_clinica: clinica });
-   
+          console.log('DATINHAAAA' + response)
           if (response.result) {
             let resultArray = [];
     

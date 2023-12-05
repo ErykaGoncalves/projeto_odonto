@@ -73,7 +73,7 @@ export default function HistoricoUsersPage(): JSX.Element {
                 className={styles.lineForm}
                 value={info}
                 onChange={(e) => setInfo(e.target.value)}
-                sx={{ width: "800px" }}
+                sx={{ width: "100%" }}
               />
             </Box>
             <Button

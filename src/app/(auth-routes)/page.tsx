@@ -134,13 +134,9 @@ export default function HomeAuth() {
               }
             }}
             type="submit"
-            disabled={loading}
           >
-            {loading ? (
-                  <CircularProgress size={24} />
-                ) : (
-                  'Entrar'
-                )}
+            {loading && !errorMessage && <CircularProgress size={24} />}
+            Entrar
           </Button>
         </form>
       </Box>
