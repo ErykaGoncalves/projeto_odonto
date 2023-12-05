@@ -9,7 +9,6 @@ import ListItemButton from '@mui/material/ListItemButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Collapse from '@mui/material/Collapse'
-import ConteudoIcon from '@mui/icons-material/LibraryBooks'
 import DomainAddIcon from '@mui/icons-material/DomainAdd'
 import RequestQuoteIcon from '@mui/icons-material/RequestQuote'
 import LibraryAddIcon from '@mui/icons-material/LibraryAdd'
@@ -200,17 +199,6 @@ export default function MenuSystem({
                                             <LibraryAddIcon />
                                         </ListItemIcon>
                                         <ListItemText primary="Agendar consulta" />
-                                    </ListItemButton>
-                                </Link>
-                                <Link
-                                    href="/panel/agendamentos/historicoConsultas"
-                                    sx={{ color: '#fff', textDecoration: 'none' }}
-                                >
-                                    <ListItemButton sx={{ pl: 4 }}>
-                                        <ListItemIcon sx={{ color: '#fff' }}>
-                                            <ConteudoIcon />
-                                        </ListItemIcon>
-                                        <ListItemText primary="Histórico de consultas" />
                                     </ListItemButton>
                                 </Link>
                             </List>
