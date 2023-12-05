@@ -148,6 +148,7 @@ export default function CadastroUsersPage(): JSX.Element {
               <TextField
                 name="nascimento"
                 label="Data de nascimento"
+                type='date'
                 variant="outlined"
                 sx={{ width: '800px' }}
                 value={nascimento}

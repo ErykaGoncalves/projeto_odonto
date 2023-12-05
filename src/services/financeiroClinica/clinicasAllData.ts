@@ -6,7 +6,8 @@ export default async function clinicasAllData({
     jwt
 }: IClinicaAllProps) {
     try {
-        const apiUrl = 'http://localhost:3001/clinicas-all'
+        const apiUrl = `${process.env.NEXT_PUBLIC_API ?? ''
+            }/clinicas-all`
 
         const headers = new Headers()
         headers.append('Authorization', `Bearer ${jwt}`)

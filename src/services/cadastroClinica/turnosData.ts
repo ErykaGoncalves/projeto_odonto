@@ -7,7 +7,8 @@ export default async function turnosData({
     jwt
 }: ITurnosProps) {
     try {
-        const apiUrl = 'http://localhost:3001/turnos'
+        const apiUrl = `${process.env.NEXT_PUBLIC_API ?? ''
+            }/turnos`
 
         const headers = new Headers()
         headers.append('Authorization', `Bearer ${jwt}`)

@@ -20,7 +20,7 @@ export default async function cadastroUserData({
   jwt,
 }: ICadastroProps): Promise<ICadastroUserResponse | null> {
   try {
-    const apiUrl = 'http://localhost:3001/user';
+    const apiUrl = `${process.env.NEXT_PUBLIC_API ?? ''}/user`
 
     const headers = new Headers();
     headers.append('Content-Type', 'application/json');

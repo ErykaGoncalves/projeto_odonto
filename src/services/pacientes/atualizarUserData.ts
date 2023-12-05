@@ -1,5 +1,5 @@
 interface IAtualizarUsersProps {
-    id: string;
+    id: number;
     nome: string;
     cpf: string;
     data_nasc: string;
@@ -20,8 +20,9 @@ export default async function AtualizarUsersData({
     jwt,
 }: IAtualizarUsersProps) {
     try {
-        const apiUrl = `http://localhost:3001/update-paciente?id=${id}`
-        
+        const apiUrl = `${process.env.NEXT_PUBLIC_API ?? ''
+            }/update-paciente?id=${id}`
+            
         const headers = new Headers();
         headers.append('Authorization', `Bearer ${jwt}`);
 

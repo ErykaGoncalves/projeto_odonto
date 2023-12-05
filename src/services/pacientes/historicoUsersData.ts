@@ -17,9 +17,9 @@ export default async function HistoricoUsersData({
             redirect: 'follow',
             cache: 'no-cache'
         }
-        const apiUrl = `http://localhost:3001/historico-paciente?info=${info}`
 
-
+        const apiUrl = `${process.env.NEXT_PUBLIC_API ?? ''
+            }/historico-paciente?info=${info}`
 
         const data = await fetch(apiUrl, requestOptions)
         const jsonData = await data.json()

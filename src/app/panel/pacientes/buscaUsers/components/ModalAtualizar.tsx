@@ -10,15 +10,17 @@ import { useSession } from 'next-auth/react'
 import AtualizarUsersData from '@/services/pacientes/atualizarUserData'
 import Snackbar from '@/components/Snackbar'
 
-interface SelectButtonProps {
-    openModal: boolean
-    setOpenModal: (value: boolean) => void
+interface ModalAtualizarProps {
+    openModal: boolean;
+    setOpenModal: (value: boolean) => void;
+    userId?: number; // userId é agora opcional
 }
 
 export default function ModalAtualizar({
     openModal,
-    setOpenModal
-}: SelectButtonProps): JSX.Element {
+    setOpenModal,
+    userId, // userId é agora opcional
+}: ModalAtualizarProps): JSX.Element {
     const [snackBarActive, setSnackBarActive] = useState<boolean>(false);
     const [snackBarColor, setSnackBarColor] = useState<AlertColor | "loading">(
         "loading"
@@ -26,8 +28,9 @@ export default function ModalAtualizar({
     const [snackBarMessage, setSnackBarMessage] = useState<string>("");
     const [autoHideDuration, setAutoHideDuration] = useState<number | null>(2000);
     const [loading, setLoading] = useState<boolean>(false);
+    const [selectedUserData, setSelectedUserData] = useState<any | null>(null); // Adicione esta linha
 
-    const [id, setId] = useState<string>('')
+    const [id, setId] = useState<number>()
     const [nome, setNome] = useState<string>('')
     const [cpf, setCpf] = useState<string>('')
     const [nascimento, setNascimento] = useState<string>('')
@@ -38,6 +41,19 @@ export default function ModalAtualizar({
     const session = useSession();
 
     const handleCloseModal = () => setOpenModal(false);
+
+    React.useEffect(() => {
+        // Atualiza os estados iniciais com os dados do usuário selecionado
+        if (selectedUserData) {
+            setId(selectedUserData.id);
+            setNome(selectedUserData.nome);
+            setCpf(selectedUserData.cpf);
+            setNascimento(selectedUserData.data_nascimento);
+            setEmail(selectedUserData.email);
+            setTelefone(selectedUserData.telefone);
+            setEndereco(selectedUserData.endereco);
+        }
+    }, [selectedUserData]);
 
     const handleSearchContent = async (): Promise<void> => {
         try {
@@ -57,7 +73,7 @@ export default function ModalAtualizar({
             }
 
             const response = await AtualizarUsersData({
-                id,
+                id: userId || selectedUserData.id,
                 nome,
                 cpf,
                 data_nasc: nascimento,
@@ -65,7 +81,7 @@ export default function ModalAtualizar({
                 telefone,
                 endereco,
                 jwt: session?.data?.jwt ?? '',
-            })
+            });
             if (response.error) {
                 setSnackBarColor('error')
                 setSnackBarMessage(response.msgUser)
@@ -127,7 +143,6 @@ export default function ModalAtualizar({
                                 label="Nome Completo"
                                 required
                                 variant="outlined"
-                                className={styles.lineForm}
                                 sx={{ width: '100%' }}
                                 onChange={(e) => setNome(e.target.value)}
                                 value={nome}
@@ -138,7 +153,6 @@ export default function ModalAtualizar({
                                 name="cpf"
                                 label="CPF"
                                 variant="outlined"
-                                className={styles.lineForm}
                                 sx={{ width: '100%' }}
                                 onChange={(e) => setCpf(e.target.value)}
                                 value={cpf}
@@ -148,6 +162,7 @@ export default function ModalAtualizar({
                             <TextField
                                 name="nascimento"
                                 label="Data de nascimento"
+                                type='date'
                                 variant="outlined"
                                 sx={{ width: '100%' }}
                                 onChange={(e) => setNascimento(e.target.value)}
@@ -159,7 +174,6 @@ export default function ModalAtualizar({
                                 name="email"
                                 label="Email"
                                 variant="outlined"
-                                className={styles.lineForm}
                                 sx={{ width: '100%' }}
                                 onChange={(e) => setEmail(e.target.value)}
                                 value={email}
@@ -170,7 +184,6 @@ export default function ModalAtualizar({
                                 name="telefone"
                                 label="Telefone"
                                 variant="outlined"
-                                className={styles.lineForm}
                                 sx={{ width: '100%' }}
                                 onChange={(e) => setTelefone(e.target.value)}
                                 value={telefone}
@@ -181,7 +194,6 @@ export default function ModalAtualizar({
                                 name="endereco"
                                 label="Endereço"
                                 variant="outlined"
-                                className={styles.lineForm}
                                 sx={{ width: '100%' }}
                                 onChange={(e) => setEndereco(e.target.value)}
                                 value={endereco}

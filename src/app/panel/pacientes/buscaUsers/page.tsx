@@ -7,8 +7,17 @@ import { useSession } from "next-auth/react";
 import myTheme from "@/theme";
 import BuscaUsersData from "@/services/pacientes/buscaUserData";
 import Buttons from "./components/Buttons";
+import ModalAtualizar from "./components/ModalAtualizar";
 
-export default function BuscaUsersPage(): JSX.Element {
+interface BuscaUsersPageProps {
+  setOpenModal: (value: boolean) => void;
+  onUserSelect: (userId: number) => void;
+}
+
+export default function BuscaUsersPage({
+  setOpenModal,
+  onUserSelect,
+}: BuscaUsersPageProps): JSX.Element {
   const [snackBarActive, setSnackBarActive] = useState<boolean>(false);
   const [snackBarColor, setSnackBarColor] = useState<AlertColor | "loading">(
     "loading"
@@ -18,18 +27,9 @@ export default function BuscaUsersPage(): JSX.Element {
   const [loading, setLoading] = useState<boolean>(false);
   const [info, setInfo] = useState<string>("");
   const [historico, setHistorico] = useState<Array<any>>([]);
-  const [selectedUserId, setSelectedUserId] = useState<number | null>(null); // Adicione esta linha
+  const [selectedUserId, setSelectedUserId] = useState<number | null>(null);
   const session = useSession();
-
-  const handleExcluirClick = (): void => {
-    // Handle the click for "Excluir" button
-    console.log("Excluir clicked");
-  };
-
-  const handleAtualizarClick = (): void => {
-    // Handle the click for "Atualizar" button
-    console.log("Atualizar clicked");
-  };
+  const [selectedUserData, setSelectedUserData] = useState<any | null>(null);
 
   const handleSearchContent = async (): Promise<void> => {
     try {
@@ -45,7 +45,7 @@ export default function BuscaUsersPage(): JSX.Element {
         info,
         jwt: session?.data?.jwt ?? "",
       });
-
+      console.log(response)
       setHistorico(response.result);
     } catch (error) {
       console.error(error);
@@ -56,9 +56,18 @@ export default function BuscaUsersPage(): JSX.Element {
       setLoading(false);
     }
   };
+
   const handleUserSelection = (userId: number) => {
+    const selectedUser = historico.find((user) => user.id === userId);
+    setSelectedUserData(selectedUser);
     setSelectedUserId(userId);
+  
+    if (typeof onUserSelect === 'function') {
+      onUserSelect(userId);
+    }
   };
+  
+
   return (
     <>
       {snackBarActive && (
@@ -144,10 +153,7 @@ export default function BuscaUsersPage(): JSX.Element {
                   <Typography>
                     Endereço: {item.endereco}
                   </Typography>
-                  <Buttons
-                    onExcluirClick={handleExcluirClick}
-                    onAtualizarClick={handleAtualizarClick}
-                  />
+                  <Buttons onUserSelect={() => handleUserSelection(item.id)} />
                 </Box>
               ))}
 

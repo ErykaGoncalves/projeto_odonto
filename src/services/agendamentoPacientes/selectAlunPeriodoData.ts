@@ -1,14 +1,13 @@
-interface IPeriodoProps {
+interface IAlunPeriodoProps {
     jwt: string
-    periodo: string
+    nome_clinica: string
 }
 
-export default async function periodoData({
-    jwt
-}: IPeriodoProps) {
+export default async function SelectAlunPeriodoData({
+    jwt,
+    nome_clinica
+}: IAlunPeriodoProps) {
     try {
-        const apiUrl = `${process.env.NEXT_PUBLIC_API ?? '' }/periodos`
-
         const headers = new Headers()
         headers.append('Authorization', `Bearer ${jwt}`)
 
@@ -18,6 +17,9 @@ export default async function periodoData({
             redirect: 'follow',
             cache: 'no-cache'
         }
+        const apiUrl = `${process.env.NEXT_PUBLIC_API ?? '' }/alunos-clinica?nome_clinica=${nome_clinica}`
+
+        console.log(apiUrl)
 
         const data = await fetch(apiUrl, requestOptions)
         const jsonData = await data.json()

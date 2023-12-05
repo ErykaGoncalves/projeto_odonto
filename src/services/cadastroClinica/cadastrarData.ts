@@ -14,7 +14,7 @@ export default async function cadastroClinicaData({
   jwt,
 }: ICadastroClinicaProps): Promise<ICadastroClinicaResponse | null> {
   try {
-    const apiUrl = 'http://localhost:3001/clinica';
+    const apiUrl = `${process.env.NEXT_PUBLIC_API ?? '' }/clinica`
 
     const requestOptions: RequestInit = {
       method: 'POST',

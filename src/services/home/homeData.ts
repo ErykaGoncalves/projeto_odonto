@@ -6,7 +6,8 @@ export default async function homeData({
   jwt
 }: IHomeProps) {
   try {
-    const apiUrl = 'http://localhost:3001/procedimentos-home'
+    const apiUrl = `${process.env.NEXT_PUBLIC_API ?? '' 
+  }/procedimentos-home`
 
     const headers = new Headers()
     headers.append('Authorization', `Bearer ${jwt}`)

@@ -8,7 +8,8 @@ export default async function HistoricoClinicasData({
     id_clinica
 }: IHistoricoProps) {
     try {
-        const apiUrl = `http://localhost:3001/historico-clinica?id_clinica=${id_clinica}`
+        const apiUrl = `${process.env.NEXT_PUBLIC_API ?? ''
+            }/historico-clinica?id_clinica=${id_clinica}`
 
         const headers = new Headers()
         headers.append('Authorization', `Bearer ${jwt}`)

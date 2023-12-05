@@ -7,8 +7,8 @@ export default async function ProcedimentoData({
     jwt
 }: IProcedimentoProps) {
     try {
-        const apiUrl = 'http://localhost:3001/procedimentos'
-
+        const apiUrl = `${process.env.NEXT_PUBLIC_API ?? '' }/procedimentos`
+        
         const headers = new Headers()
         headers.append('Authorization', `Bearer ${jwt}`)
 

@@ -1,0 +1,8 @@
+const actions = {
+  SALVAR_ALUNOS: 'SALVAR_ALUNOS',
+  SALVAR_CLINICA: 'SALVAR_CLINICA',
+  SALVAR_DATA: 'SALVAR_DATA',
+  SALVAR_HORARIO: 'SALVAR_HORARIO',
+}
+
+export default actions
